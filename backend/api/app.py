@@ -1,11 +1,13 @@
 from flask import Flask
-from users import users_route
+from flask_restful import Api, Resource
+from users.users import UserRegistration
 
 app = Flask(__name__)
+api = Api(app)
 
-# Register all routes
-app.register_blueprint(users_route)
+# Add api routes
+api.add_resource(UserRegistration, "/api/user")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+
   app.run(debug=True)
-
