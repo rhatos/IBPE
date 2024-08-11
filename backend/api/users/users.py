@@ -12,7 +12,7 @@ class UserRegistration(Resource):
   def get(self):
 
     # Define arguments for GET request
-    args = user_get_args.parse_args()
+    args = user_register_get_args.parse_args()
     username = args.get("username")
     email = args.get("email")
 
@@ -35,7 +35,7 @@ class UserRegistration(Resource):
   def post(self):
     
     # Define arguments required for POST
-    args = user_post_args.parse_args()
+    args = user_register_post_args.parse_args()
     username = args.get("username")
     email = args.get("email")
     password = args.get("password")
@@ -61,15 +61,45 @@ class UserRegistration(Resource):
     else:
       return {"accountCreated": account_created, "errorMsg": error_msg}
 
+class UserLogin(Resource):
+  def get(self):
+    return {"message": "none"}
+  
+  # Login POST request
+  def post(self):
+    args = user_login_get_args.parse_args()
+    username = args.get("username")
+    password = args.get("password")
+
+    credentials_correct = False
+
+    # DB Logic
+    ###
+    ###
+
+    credentials_correct = True
+
+    # JWT Logic
+    # Assign JWT
+
+    return {"loginSuccessful": credentials_correct}
+    
 
 
-# Request arguments
-user_get_args = reqparse.RequestParser()
-user_get_args.add_argument("username", type=str, help="Username value missing!", location="json", required=True)
-user_get_args.add_argument("email", type=str, help="Email value missing!",location="json", required=True)
 
-user_post_args = reqparse.RequestParser()
-user_post_args.add_argument("username", type=str, help="Username value missing!", location="json", required=True)
-user_post_args.add_argument("email", type=str, help="Email value missing!",location="json", required=True)
-user_post_args.add_argument("password", type=str, help="Password value missing!",location="json", required=True)
+
+# Login Request arguments
+user_login_get_args = reqparse.RequestParser()
+user_login_get_args.add_argument("username", type=str, help="Username value missing!", location="json", required=True)
+user_login_get_args.add_argument("password", type=str, help="Password value missing!", location="json", required=True)
+
+# Register Request arguments
+user_register_get_args = reqparse.RequestParser()
+user_register_get_args.add_argument("username", type=str, help="Username value missing!", location="json", required=True)
+user_register_get_args.add_argument("email", type=str, help="Email value missing!",location="json", required=True)
+
+user_register_post_args = reqparse.RequestParser()
+user_register_post_args.add_argument("username", type=str, help="Username value missing!", location="json", required=True)
+user_register_post_args.add_argument("email", type=str, help="Email value missing!",location="json", required=True)
+user_register_post_args.add_argument("password", type=str, help="Password value missing!",location="json", required=True)
 
