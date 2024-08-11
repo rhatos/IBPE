@@ -6,7 +6,7 @@ app = Flask(__name__)
 api = Api(app)
 
 # Add api routes
-api.add_resource(UserRegistration, "/api/user")
+api.add_resource(UserRegistration, "/api/user/register")
 
 if __name__ == "__main__":
 
