@@ -9,7 +9,7 @@ const HeroCard = () => {
       <div className="flex justify-between bg-bpegrey m-3 rounded-2xl">
         <div className="flex-col space-y-5  w-full p-8">
           <h1 className="text-4xl font-inter font-medium text-white">
-            <span className="text-bpegreen">BPE</span> Tokenizer
+            <span className="text-bpegreen">BPE</span> Tokenization
           </h1>
           <p className="text-white text-md font-inter font-light pb-4">
             BPE (Byte Pair Encoding) tokenization is a method used in natural
@@ -17,6 +17,18 @@ const HeroCard = () => {
             rather than just words or characters. <br /> <br /> This approach is
             particularly effective for handling rare words, reducing vocabulary
             size, and improving the efficiency of language models.
+          </p>
+          <h1 className="text-3xl font-inter font-medium text-white pt-2">
+            Train your own <span className="text-bpegreen">BPE </span> tokenizer
+          </h1>
+          <p className="text-white text-md font-inter font-light pb-4">
+            This website provides the ability to train and save your own BPE
+            tokenizer with various parameters and using any training corpus.
+            <br />
+            <br />
+            Then with your own trained tokenizer you can tokenize any corpus you
+            want, see the statistics of your tokenizer and view the tokenized
+            version of your corpus!
           </p>
           <TrainNowButton />
         </div>
