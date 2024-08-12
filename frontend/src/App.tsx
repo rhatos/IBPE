@@ -1,10 +1,29 @@
-import { useState } from "react";
-import "./App.css";
+import React from "react";
 
-function App() {
-  const [count, setCount] = useState(0);
+import {
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+} from "react-router-dom";
 
-  return <></>;
-}
+import MainLayout from "./layouts/MainLayout";
+import HomePage from "./pages/HomePage";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<MainLayout />}>
+      <Route index element={<HomePage />} />
+    </Route>
+  )
+);
+
+const App = () => {
+  return (
+    <>
+      <RouterProvider router={router} />
+    </>
+  );
+};
 
 export default App;
