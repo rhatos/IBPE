@@ -5,7 +5,7 @@ import TrainNowButton from "./buttons/TrainNowButton";
 
 const HeroCard = () => {
   return (
-    <div className=" rounded-2xl w-2/5 mx-auto ">
+    <div className=" rounded-2xl  md:w-4/5 lg:w-3/5 xl:w-2/5 mx-auto ">
       <div className="flex justify-between bg-bpegrey m-3 rounded-2xl">
         <div className="flex-col space-y-5  w-full p-8">
           <h1 className="text-4xl font-inter font-medium text-white">
