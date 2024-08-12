@@ -23,3 +23,24 @@
 `cd frontend`
 
 `npm install`
+
+## Usage
+
+### Serving frontend
+
+```
+cd frontend
+npm run dev
+```
+
+### Serving backend
+
+Ensure you have set your virtual environment as described above!
+
+As well as your docker image of mongodb MUST be running, use the vscode extension to check its connection.
+
+```
+cd backend
+python app.py
+```
+
