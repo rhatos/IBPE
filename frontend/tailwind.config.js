@@ -1,11 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        bpegrey: "#252422",
-        bpegreen: "#8DAB7F",
+        bpegrey: "#202123",
+        bpelightgrey: "#131315",
+        bpegreen: "#53DD6C",
+        bpeblack: "#0A0A0B",
+      },
+      fontFamily: {
+        inter: ["Inter"],
       },
     },
   },
