@@ -1,7 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const TrainNowButton = () => {
   return (
+    <Link to="/train">
     <div
       className="
   bg-bpegreen hover:bg-green-500 text-black w-36 text-center h-12 shadow-lg drop-shadow-lg
@@ -21,6 +23,7 @@ const TrainNowButton = () => {
         />
       </svg>
     </div>
+    </Link>
   );
 };
 
