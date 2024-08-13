@@ -7,7 +7,8 @@ const CorpusUpload = () => {
       <div className="pr-32 pl-32 pt-16 pb-16 border-dashed border-2 rounded-lg">
         <UploadSVG></UploadSVG>
       </div>
-      <div className=" text-white pt-5">Upload Training Corpus</div>
+      <span className=" text-white pt-5">Upload Training Corpus</span>
+      <span className=" text-white text-xs">File must be .txt*</span>
     </div>
   );
 };
