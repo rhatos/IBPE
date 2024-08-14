@@ -1,22 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import LoginButton from "./buttons/LoginButton";
 import RegisterButton from "./buttons/RegisterButton";
 import { Link } from "react-router-dom";
+import UserButton from "./buttons/UserButton";
 
 const Navbar = () => {
+  const [loggedIn, setLoggedIn] = useState(true);
+
   return (
     <div className="bg-bpeblack rounded-b-sm w-full mx-auto mb-8">
       <div className="flex justify-between items-center p-3">
-        <Link to="/">
-          <div className="flex space-x-4 ">
+        <div className="flex space-x-4 items-center">
+          <Link to="/">
             <p className="text-xl text-white font-medium font-inter">
               Interactive <span className="text-bpegreen"> BPE</span> Tool
             </p>
-          </div>
-        </Link>
-        <div className="flex space-x-2">
-          <LoginButton />
-          <RegisterButton />
+          </Link>
+        </div>
+
+        <div className="flex space-x-4 items-center">
+          {loggedIn && (
+            <div className="flex space-x-5 items-center pr-3">
+              <p className="text-gray-200 hover:text-white font-medium font-inter text-sm">
+                Test Model
+              </p>
+
+              <p className="text-gray-200 hover:text-white font-medium font-inter text-sm">
+                Models
+              </p>
+              <UserButton />
+            </div>
+          )}
+
+          {!loggedIn && (
+            <div className="flex space-x-2 items-center">
+              <LoginButton />
+              <RegisterButton />
+            </div>
+          )}
         </div>
       </div>
     </div>

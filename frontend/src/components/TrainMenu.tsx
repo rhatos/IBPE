@@ -38,9 +38,19 @@ const TrainMenu = () => {
       )}
 
       {state === 1 && (
-        <div className="flex justify-center space-y-12 p-20">
-          <p className="text-xl font-inter text-white">Training...</p>
-          <ProgressBar changePageState={() => changeState(2)} />
+        <div className="w-4/5 flex flex-col items-center justify-center space-y-12">
+          <h1 className="text-4xl font-inter font-medium text-white">
+            {/* Page Title */}
+            <span className="text-bpegreen">Training</span> Job Queued
+          </h1>
+          <p className="text-white text-md font-inter font-light pb-4">
+            <span className="text-lg font-bold">
+              Your model is being trained!
+            </span>
+            <br /> <br /> You can view the training progress via the menu in the
+            bottom right.
+          </p>
+          {/* <ProgressBar changePageState={() => changeState(2)} /> */}
         </div>
       )}
 
