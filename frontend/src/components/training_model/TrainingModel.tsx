@@ -16,8 +16,6 @@ const TrainingModel = () => {
         </div>
         <div className="flex overflow-auto flex-col space-y-1 bg-bpeblack h-28">
           <TrainingItem modelName={"Model1"} />
-          <TrainingItem modelName={"Model1"} />
-          <TrainingItem modelName={"Model1"} />
         </div>
       </div>
     </div>

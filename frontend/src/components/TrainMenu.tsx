@@ -4,11 +4,11 @@ import CorpusUpload from "./inputs/CorpusUpload";
 import TokenizerSubwordInput from "./inputs/TokenizerSubwordInput";
 import TrainTokenizer from "./buttons/TrainTokenizer";
 import ProgressBar from "./bars/ProgressBar";
+import TrainAnotherModel from "./buttons/TrainAnotherModel";
 
-// Needs 3 states:
+// Needs 2 states:
 // Default -> normal upload file and set parameters
-// Training -> Displays training progress
-// Trained -> Displays statistics and subword vocab
+// Train job submitted -> indicate to user that job is on the queue
 
 const TrainMenu = () => {
   // Page state
@@ -50,6 +50,7 @@ const TrainMenu = () => {
             <br /> <br /> You can view the training progress via the menu in the
             bottom right.
           </p>
+          <TrainAnotherModel onClick={() => changeState(0)} />
           {/* <ProgressBar changePageState={() => changeState(2)} /> */}
         </div>
       )}

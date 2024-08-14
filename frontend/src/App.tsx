@@ -11,13 +11,15 @@ import MainLayout from "./layouts/MainLayout";
 import HomePage from "./pages/HomePage";
 import TrainingPage from "./pages/TrainingPage";
 import TokenizePage from "./pages/TokenizePage";
+import TrainedModelsPage from "./pages/TrainedModelsPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
       <Route index element={<HomePage />} />
       <Route path="/train" element={<TrainingPage />} />
-      <Route path="/tokenize" element={<TokenizePage />}></Route>
+      <Route path="/user/model/tokenize" element={<TokenizePage />} />
+      <Route path="/user/models" element={<TrainedModelsPage />} />
     </Route>
   )
 );

@@ -21,13 +21,22 @@ const Navbar = () => {
         <div className="flex space-x-4 items-center">
           {loggedIn && (
             <div className="flex space-x-5 items-center pr-3">
-              <p className="text-gray-200 hover:text-white font-medium font-inter text-sm">
-                Test Model
-              </p>
+              <Link to="/user/model/tokenize">
+                <p className="text-gray-200 hover:text-white font-medium font-inter text-sm">
+                  Test Model
+                </p>
+              </Link>
+              <Link to="/train">
+                <p className="text-gray-200 hover:text-white font-medium font-inter text-sm">
+                  Train Model
+                </p>
+              </Link>
+              <Link to="/user/models">
+                <p className="text-gray-200 hover:text-white font-medium font-inter text-sm">
+                  Models
+                </p>
+              </Link>
 
-              <p className="text-gray-200 hover:text-white font-medium font-inter text-sm">
-                Models
-              </p>
               <UserButton />
             </div>
           )}
