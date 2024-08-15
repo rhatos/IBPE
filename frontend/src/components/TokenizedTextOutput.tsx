@@ -140,6 +140,12 @@ const TokenizedTextOutput = () => {
           </div>
         </div>
       </div>
+
+      <div className="flex flex-row space-x-5">
+        <button className="w-20 h-8 rounded-md drop-shadow-lg text-black font-inter text-sm bg-bpegreen">
+          Export
+        </button>
+      </div>
     </div>
   );
 };
