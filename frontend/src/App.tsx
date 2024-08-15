@@ -12,6 +12,7 @@ import HomePage from "./pages/HomePage";
 import TrainingPage from "./pages/TrainingPage";
 import TokenizePage from "./pages/TokenizePage";
 import TrainedModelsPage from "./pages/TrainedModelsPage";
+import TokenizedTextPage from "./pages/TokenizedTextPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
       <Route path="/train" element={<TrainingPage />} />
       <Route path="/user/model/tokenize" element={<TokenizePage />} />
       <Route path="/user/models" element={<TrainedModelsPage />} />
+      <Route path="/user/tests/tokenized" element={<TokenizedTextPage />} />
     </Route>
   )
 );

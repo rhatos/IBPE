@@ -4,6 +4,7 @@ import SelectTokenizer from "./inputs/SelectTokenizer";
 import TestCorpusTextArea from "./inputs/TestCorpusTextArea";
 import PencilSVG from "../assets/svgs/PencilSVG";
 import TestTitleInput from "./inputs/TestTitleInput";
+import { Link } from "react-router-dom";
 
 const TokenizeMenu = () => {
   const [tokenizerSelected, setTokenizerSelected] = useState(false);
@@ -68,15 +69,17 @@ const TokenizeMenu = () => {
         <TestTitleInput />
       </div>
       <div className="flex justify-center items-center">
-        <button>
-          <div
-            className="
+        <Link to="/user/tests/tokenized">
+          <button>
+            <div
+              className="
 bg-bpegreen hover:bg-green-500 text-black w-36 text-center h-12 shadow-lg drop-shadow-lg
 rounded-xl flex p-4 items-center justify-center font-inter"
-          >
-            <p className="text-sm">Tokenize text</p>
-          </div>
-        </button>
+            >
+              <p className="text-sm">Tokenize text</p>
+            </div>
+          </button>
+        </Link>
       </div>
     </div>
   );
