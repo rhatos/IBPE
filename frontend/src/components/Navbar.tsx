@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+
 import LoginButton from "./buttons/LoginButton";
 import RegisterButton from "./buttons/RegisterButton";
-import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { RootState } from '../store/store';
 import UserButton from "./buttons/UserButton";
 
-const Navbar = () => {
-  const [loggedIn, setLoggedIn] = useState(true);
+const Navbar: React.FC = () => {
+  const loggedIn = useSelector((state: RootState) => state.auth.loggedIn);
 
   return (
+    
     <div className="bg-bpeblack rounded-b-sm w-full mx-auto mb-8">
       <div className="flex justify-between items-center p-3">
         <div className="flex space-x-4 items-center">

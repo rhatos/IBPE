@@ -1,6 +1,3 @@
-import React from "react";
-
-import bpeimage from "../assets/BPEImage.png";
 import TrainNowButton from "./buttons/TrainNowButton";
 
 const HeroCard = () => {

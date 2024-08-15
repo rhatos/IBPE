@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const ProgressBar = ({}) => {
   const [filled, setFilled] = useState(10);
@@ -6,7 +6,7 @@ const ProgressBar = ({}) => {
 
   useEffect(() => {
     if (filled < 100 && isRunning) {
-      setTimeout(() => setFilled((prev) => (prev += 1)), 2000);
+      setTimeout(() => setFilled((prev) => (prev += 10)), 500);
     }
   }, [filled, isRunning]);
 
