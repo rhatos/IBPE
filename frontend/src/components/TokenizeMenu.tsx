@@ -22,7 +22,6 @@ const TokenizeMenu = () => {
         <div>File</div>
       </div>
       <div className="flex flex-col space-y-10 items-center justify-center">
-        {" "}
         <SelectTokenizer
           isTokenizerSelected={tokenizerSelected}
           tokenizerIsSelected={setTokenizerSelected}
