@@ -1,6 +1,11 @@
+import { useSelector } from "react-redux";
 import TrainNowButton from "./buttons/TrainNowButton";
+import { RootState } from "../store/store";
 
 const HeroCard = () => {
+
+  const loggedIn = useSelector((state: RootState) => state.auth.loggedIn);
+
   return (
     <div className=" rounded-2xl  md:w-4/5 lg:w-3/5 xl:w-2/5 mx-auto ">
       <div className="flex justify-between bg-bpegrey m-3 rounded-2xl">
@@ -27,6 +32,9 @@ const HeroCard = () => {
             want, see the statistics of your tokenizer and view the tokenized
             version of your corpus!
           </p>
+          {!loggedIn && (
+            <p className="text-white text-md font-inter font-light pb-4"><span className="font-medium text-bpegreen">Ready to tokenize?</span> Log in now to train and test your own models. New to tokenization? No problem! Experiment with our pre-trained defaults.</p>
+          )}
           <TrainNowButton />
         </div>
       </div>

@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
+import { AppDispatch } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { removeFromTrainingQueue } from "../../slices/trainingSlice";
 
-const ProgressBar = ({}) => {
+const ProgressBar = ({ name}: {name: string }) => {
+
+  const dispatch: AppDispatch = useDispatch();
   const [filled, setFilled] = useState(10);
   const [isRunning, setIsRunning] = useState(true);
 
@@ -13,6 +18,7 @@ const ProgressBar = ({}) => {
   if (filled >= 100 && isRunning) {
     console.log("Done");
     setIsRunning(false);
+    dispatch(removeFromTrainingQueue({name}))
   }
 
   return (
