@@ -1,0 +1,16 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: bpe-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: capstone2024
+      MONGO_INITDB_ROOT_PASSWORD: changeme123
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodata:/data/db
+
+volumes:
+  mongodata:
+    driver: local
