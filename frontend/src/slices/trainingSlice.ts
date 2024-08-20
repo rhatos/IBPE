@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface TrainingQueueItem  {
+export interface TrainingQueueItem  {
     name: string;
 }
 

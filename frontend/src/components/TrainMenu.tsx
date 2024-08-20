@@ -48,6 +48,7 @@ const TrainMenu = () => {
                 <input
                   placeholder= {name}
                   value={name}
+                  maxLength={8}
                   onChange={(e) => setName(e.target.value)}
                   className="w-80 bg-transparent rounded-sm text-white placeholder:text-opacity-20 font-inter text-sm focus:ring-opacity-50 focus:ring-1 outline-none"
                 />
@@ -55,9 +56,7 @@ const TrainMenu = () => {
           </div>
           <PencilSVG />
         </div>
-
           <TokenizerSubwordInput />
-
           <TrainTokenizer onClick={() => changeState(1)} />
         </>
       )}

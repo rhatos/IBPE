@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import OpenArrow from "../../assets/svgs/OpenArrow";
 import TrainingItem from "./TrainingItem";
 import { RootState } from "../../store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const TrainingModel = () => {
 
@@ -11,7 +11,13 @@ const TrainingModel = () => {
   const trainingQueue = useSelector((state: RootState) => state.trainingQueue.trainingQueue)
 
   const [isActive, setIsActive] = useState(false);
-  const minimize = isActive ? 'h-1' : '';
+  const minimize = isActive ? '' : 'h-1';
+
+  useEffect(() => {
+    if (trainingQueue.length > 0) {
+      setIsActive(true);
+    }
+  }, [trainingQueue]);
 
   return (
     <div>
