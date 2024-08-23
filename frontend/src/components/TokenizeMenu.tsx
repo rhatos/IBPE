@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TestCorpusUpload from "./inputs/TestCorpusUpload";
 import SelectTokenizer from "./inputs/SelectTokenizer";
 import TestCorpusTextArea from "./inputs/TestCorpusTextArea";
-import PencilSVG from "../assets/svgs/PencilSVG";
 import TestTitleInput from "./inputs/TestTitleInput";
 import { Link } from "react-router-dom";
 

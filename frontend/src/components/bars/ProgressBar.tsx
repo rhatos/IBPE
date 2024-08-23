@@ -1,18 +1,24 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { AppDispatch } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { removeFromTrainingQueue } from "../../slices/trainingSlice";
 
-const ProgressBar = ({}) => {
+const ProgressBar = ({ name}: {name: string }) => {
+
+  const dispatch: AppDispatch = useDispatch();
   const [filled, setFilled] = useState(10);
   const [isRunning, setIsRunning] = useState(true);
 
   useEffect(() => {
     if (filled < 100 && isRunning) {
-      setTimeout(() => setFilled((prev) => (prev += 1)), 2000);
+      setTimeout(() => setFilled((prev) => (prev += 10)), 500);
     }
   }, [filled, isRunning]);
 
   if (filled >= 100 && isRunning) {
     console.log("Done");
     setIsRunning(false);
+    dispatch(removeFromTrainingQueue({name}))
   }
 
   return (

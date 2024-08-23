@@ -1,11 +1,23 @@
-import React from "react";
-import UserSVG from "../../assets/svgs/UserSVG";
 
-const UserButton = () => {
+import { useDispatch } from "react-redux";
+import UserSVG from "../../assets/svgs/UserSVG";
+import { AppDispatch } from "../../store/store";
+import { setLoggedIn } from "../../slices/authSlice";
+
+
+const UserButton: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(setLoggedIn(false));
+  };
   return (
-    <div className="pl-2 text-gray-200 hover:text-white flex items-center font-medium font-inter text-xs">
+    <div
+      onClick={handleLogout}
+      className="pl-2 text-gray-200 hover:text-white flex items-center font-medium font-inter text-xs cursor-pointer"
+    >
       <UserSVG />
-      Conor
+      User
     </div>
   );
 };
