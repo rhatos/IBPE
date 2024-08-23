@@ -24,23 +24,20 @@
 
 `npm install`
 
-## Usage
+## Docker Instructions
 
-### Serving frontend
+Use docker for the mongodb database (Likely more as we expand).
 
-```
-cd frontend
-npm run dev
-```
+`docker-compose up -d`
 
-### Serving backend
+It may take some time but it will eventually be running in the background.
 
-Ensure you have set your virtual environment as described above!
+### MongoDB
 
-As well as your docker image of mongodb MUST be running, use the vscode extension to check its connection.
+It is running at `localhost:27017`
 
-```
-cd backend
-python app.py
-```
+`Username: capstone2024`
 
+`Password: changeme123`
+
+Make sure you have the mongoDB extension installed, `MongoDB for VS Code`
