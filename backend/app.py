@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_restful import Api, Resource
-from backend.api.users import UserRegistration, UserLogin, UserLogoutAccess, UserLogoutRefresh, TokenRefresh
+from api.users import UserRegistration, UserLogin, UserLogoutAccess, UserLogoutRefresh, TokenRefresh
 from flask_jwt_extended import JWTManager
 from dotenv import dotenv_values
 
