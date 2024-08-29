@@ -1,4 +1,3 @@
-
 import { useSelector } from "react-redux";
 import OpenArrow from "../../assets/svgs/OpenArrow";
 import TrainingItem from "./TrainingItem";
@@ -21,10 +20,9 @@ const TrainingModel = () => {
 
   return (
     <div>
-      {!loggedIn &&(
+      {!loggedIn ? (
       <div></div>
-      )}
-      {loggedIn &&(
+      ):(
       <div className="w-80 border-black rounded-lg m-8 drop-shadow-lg shadow-md flex">
           <div className="flex-col w-full">
             <div className={minimize}>

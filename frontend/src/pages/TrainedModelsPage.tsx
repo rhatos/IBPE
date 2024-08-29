@@ -1,4 +1,3 @@
-import React from "react";
 import TrainedModelItem from "../components/TrainedModelItem";
 import { Link } from "react-router-dom";
 

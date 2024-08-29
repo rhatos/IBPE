@@ -1,4 +1,3 @@
-import React from "react";
 import TrainMenu from "../components/TrainMenu";
 
 const TrainingPage = () => {

@@ -1,11 +1,24 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import OpenArrow from "../../assets/svgs/OpenArrow";
-import ModelItemDrawer from "./test_tokenizer_menu_drawer/ModelItemDrawer";
+// import ModelItemDrawer from "./test_tokenizer_menu_drawer/ModelItemDrawer";
 
-const SelectTokenizer = ({ isTokenizerSelected, tokenizerIsSelected }) => {
+interface SelectTokenizerProps {
+  isTokenizerSelected: boolean;
+  tokenizerIsSelected: (selected: boolean) => void;
+}
+
+const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
+  isTokenizerSelected,
+  tokenizerIsSelected
+}) => {
   const [tokenizerDrawerOpen, setTokenizerDrawerOpen] = useState(false);
-
   const [tokenizerName, setTokenizerName] = useState("");
+
+  const handleTokenizerSelect = (name: string, selected: boolean) => {
+    setTokenizerName(name);
+    setTokenizerDrawerOpen(false);
+    tokenizerIsSelected(selected);
+  };
 
   return (
     <div className="flex flex-col">
@@ -15,24 +28,17 @@ const SelectTokenizer = ({ isTokenizerSelected, tokenizerIsSelected }) => {
             Tokenizer to use *
           </label>
           <div className="flex flex-row items-center justify-center">
-            {!isTokenizerSelected && (
-              <p className="w-80 bg-transparent rounded-sm rounded-b-none text-red-500 font-inter text-sm">
-                Default Tokenizer
-              </p>
-            )}
-            {isTokenizerSelected && (
-              <p className="w-80 bg-transparent rounded-sm text-white font-inter text-sm">
-                {tokenizerName}
-              </p>
-            )}
+            <p
+              className={`w-80 bg-transparent rounded-sm ${
+                isTokenizerSelected ? "text-white" : "text-red-500"
+              } font-inter text-sm`}
+            >
+              {isTokenizerSelected ? tokenizerName : "Default Tokenizer"}
+            </p>
           </div>
         </div>
         <button
-          onClick={() =>
-            tokenizerDrawerOpen
-              ? setTokenizerDrawerOpen(false)
-              : setTokenizerDrawerOpen(true)
-          }
+          onClick={() => setTokenizerDrawerOpen((prev) => !prev)}
         >
           <OpenArrow />
         </button>
@@ -40,11 +46,7 @@ const SelectTokenizer = ({ isTokenizerSelected, tokenizerIsSelected }) => {
       {tokenizerDrawerOpen && (
         <div>
           <li
-            onClick={() => {
-              setTokenizerDrawerOpen(false);
-              setTokenizerName("Model 1");
-              tokenizerIsSelected(true);
-            }}
+            onClick={() => handleTokenizerSelect("Model 1", true)}
             className="flex flex-row h-12 border-b-2 border-white border-opacity-20 justify-between items-center bg-bpeblack hover:bg-bpelightgrey"
           >
             <div className="text-white font-inter text-sm pl-2">Model 1</div>
@@ -53,11 +55,7 @@ const SelectTokenizer = ({ isTokenizerSelected, tokenizerIsSelected }) => {
             </div>
           </li>
           <li
-            onClick={() => {
-              setTokenizerDrawerOpen(false);
-              setTokenizerName("Default");
-              tokenizerIsSelected(false);
-            }}
+            onClick={() => handleTokenizerSelect("Default", false)}
             className="flex flex-row h-12 border-b-2 border-white border-opacity-20 justify-between items-center bg-bpeblack hover:bg-bpelightgrey"
           >
             <div className="text-red-500 font-inter text-sm pl-2">

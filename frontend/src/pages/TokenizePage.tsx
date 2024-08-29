@@ -1,4 +1,3 @@
-import React from "react";
 import TokenizeMenu from "../components/TokenizeMenu";
 
 const TokenizePage = () => {
