@@ -1,4 +1,3 @@
-
 import TokenizedTextOutput from "../components/TokenizedTextOutput";
 
 const TokenizedTextPage = () => {

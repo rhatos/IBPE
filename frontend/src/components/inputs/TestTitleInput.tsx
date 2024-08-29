@@ -1,4 +1,3 @@
-import React from "react";
 import PencilSVG from "../../assets/svgs/PencilSVG";
 
 const TestTitleInput = () => {
