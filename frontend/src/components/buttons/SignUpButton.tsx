@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../modals/modal";
 import { setLoggedIn } from "../../slices/authSlice";
 import { setLogInModalOpen, setRegModalOpen } from "../../slices/modalSlice";
@@ -14,16 +14,76 @@ const SignUpButton: React.FC = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [errMessage, setErrMessage] = useState<string | null>(null);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
-  const handleSignUpClick = () => {
-    dispatch(setLoggedIn(true));
+  const resetFormState = () => {
     dispatch(setRegModalOpen(false))
+    setUsername('');
+    setPassword('');
+    setEmail('');
+    setConfirm('');
+    setErrMessage(null);
+    setIsButtonDisabled(true);
+  };
+
+  useEffect(() => {
+    const isEmailValid = email.includes('@');
+
+    if (!isEmailValid && email) {
+      setErrMessage("Invalid email format");
+      setIsButtonDisabled(true);
+    } else if (password && confirm && password !== confirm) {
+      setErrMessage("Passwords do not match");
+      setIsButtonDisabled(true);
+    } else if (username && password && email && confirm && password === confirm) {
+      setErrMessage(null);
+      setIsButtonDisabled(false);
+    } else {
+      setErrMessage(null)
+      setIsButtonDisabled(true);
+    }
+  }, [username, password, email, confirm]);
+
+  const handleSignUpClick = async () => {
+    if (isButtonDisabled) return;
+    
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/user/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+          email: email
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setErrMessage(data.error);
+        setIsButtonDisabled(true);
+        return;
+      }
+      
+      dispatch(setLoggedIn({ loggedIn: true, username, token: data.access_token }));
+      dispatch(setRegModalOpen(false));
+      resetFormState();
+  
+    } catch (error) {
+      setErrMessage("Something went wrong, please contact support if this persists");
+      setIsButtonDisabled(true);
+    }
 
   };
 
   const handleLogInClick = () => {
     dispatch(setRegModalOpen(false))
     dispatch(setLogInModalOpen(true));
+    resetFormState();
   };
 
   return (
@@ -35,8 +95,14 @@ const SignUpButton: React.FC = () => {
         <p className="text-sm">Sign Up</p>
       </button>
 
-      <Modal isOpen={isModalOpen} onClose={() => dispatch(setRegModalOpen(false))}>
+      <Modal isOpen={isModalOpen} onClose={() => resetFormState()}>
         <h2 className="text-bpegreen text-lg font-semibold mb-4">Sign Up</h2>
+
+        {errMessage && (
+        <div className="mb-4 text-red-500 font-semibold">
+          {errMessage}
+        </div>
+        )}
 
         <div className="mb-4">
           <label className="block text-white">Email</label>
@@ -77,7 +143,8 @@ const SignUpButton: React.FC = () => {
         <div className="space-y-6"> 
           <button
             onClick={handleSignUpClick}
-            className="bg-bpegreen hover:bg-green-500 text-black w-28 text-center h-10 drop-shadow-xl rounded-lg flex items-center justify-center font-inter">
+            className={`bg-bpegreen hover:bg-green-500 text-black w-28 text-center h-10 drop-shadow-xl rounded-lg flex items-center justify-center font-inter ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isButtonDisabled}>
             Sign Up
           </button>
           

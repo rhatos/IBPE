@@ -1,4 +1,4 @@
-import LogInButton from "./buttons/LogInButton";
+import LogInButton from "./buttons/LoginButton";
 import SignUpButton from "./buttons/SignUpButton";
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
