@@ -39,7 +39,7 @@ const TrainingModel = () => {
             <div className="flex overflow-auto flex-col space-y-1 bg-bpeblack h-28">
               {trainingQueue.length > 0 && (
                 trainingQueue.map((item, index) => (
-                  <TrainingItem key={index} modelName={item.name} />
+                  <TrainingItem key={index} modelName={item.name} _id={item._id} />
                 ))
               )}
             </div>
