@@ -3,7 +3,8 @@ from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 from api.users import UserRegistration, UserLogin, UserLogoutAccess, UserLogoutRefresh, TokenRefresh
 from api.tokenizer import CheckTrainingStatus, CreateNewTokenizer, TokenizerFinishedTraining, DeleteTokenizer, UpdateTokenizer, UploadTrainingFile
-from api.testTokenizer import CreateTestTokenizer, TokenizerFinishedTesting
+from api.testTokenizer import CreateTestTokenizer, TokenizerFinishedTesting, CheckTokenizationStatus, UploadTestFile
+from api.viewModels import GetTrainedModels
 from flask_jwt_extended import JWTManager
 from dotenv import dotenv_values
 from flask_cors import CORS # type: ignore
