@@ -1,7 +1,7 @@
 from bson import ObjectId
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from flask import jsonify, request
+from flask import jsonify, request, send_file
 from database import database
 from models import TokenizedText
 from werkzeug.utils import secure_filename
@@ -164,6 +164,41 @@ class UploadTestFile(Resource):
     else:
       return {'error': 'File type not allowed'}, 400
 
+class DownloadTestOutput(Resource):
+  @jwt_required()
+  def get(self):
+    args = download_test_args.parse_args()
+    test_id = args.get('test_id')
+
+    # Get username from JWT and the user ID from the db
+    username = get_jwt_identity()
+    user = database.users.find_one({"username": username})
+    user_id = str(user['_id'])
+
+    # Query database for the test by its id
+    test = database.tests.find_one({"_id": ObjectId(test_id)})
+    
+    # Check if test exists in db
+    if test:
+      # Get the user id attached to the test
+      test_user_id = test.get('user_id')
+
+      # Ensure that the user requesting owns the test
+      if test_user_id == user_id:
+
+        # Get file path
+        output_file = test.get('output_file')
+
+        # Check if the file exists
+        if(os.path.exists(output_file)):
+          return send_file(output_file, as_attachment=True)
+        else:
+          return {"error": "File does not exist"}, 404
+      else:
+        return {"error": "Test is not owned by user"}, 400
+    else:
+      return {"error": "Cannot find test"}, 404
+
 class CheckTokenizationStatus(Resource):
   def get(self):
     args = check_tokenization_args.parse_args()
@@ -208,8 +243,12 @@ class CheckTokenizationStatus(Resource):
 
 # Request Arguments
 
+# Download output arguments
+download_test_args = reqparse.RequestParser()
+download_test_args.add_argument("test_id", type=str, help="Test ID Missing", location="json", required=True)
+
 # Check Tokenization arguments
-check_tokenization_args =  reqparse.RequestParser()
+check_tokenization_args = reqparse.RequestParser()
 check_tokenization_args.add_argument("test_id", type=str, help="Test ID Missing", location="json", required=True)
 
 # Tokenizer finished testing arguments

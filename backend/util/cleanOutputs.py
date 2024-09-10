@@ -19,7 +19,6 @@ def clean_job():
     file_creation_time=int(file.split("_")[0])
     current_time = int(time.time())
     time_difference = current_time - file_creation_time
-    print(time_difference)
     if time_difference > 1800:
       print(f"[CLEAN JOB]: File {file} is {time_difference}s old, deleting.")
       os.remove("bpe/outputs/testing/"+file)
