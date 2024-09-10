@@ -5,3 +5,4 @@ flask_jwt_extended
 flask_restful
 requests
 passlib
+Flask-APScheduler

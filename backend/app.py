@@ -9,6 +9,8 @@ from flask_jwt_extended import JWTManager
 from dotenv import dotenv_values
 from flask_cors import CORS # type: ignore
 from datetime import timedelta
+from flask_apscheduler import APScheduler
+from util import cleanOutputs
 
 # ENV Values
 config = dotenv_values(".env")
@@ -81,6 +83,10 @@ api.add_resource(CheckTokenizationStatus, "/api/tokenizer-test/status")
 # Upload test file endpoint
 api.add_resource(UploadTestFile, "/api/tokenizer-test/upload")
 
+# APS Scheduler for deleting files after n time
+# NB: This has weird behaviour when running in debug mode on flask, it will essentially fire a job twice
+scheduler = APScheduler()
+scheduler.start()
 
 if __name__ == "__main__":
   app.run(debug=True)
