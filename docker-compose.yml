@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: mongo:latest
+    image: mongo:4.4.6
     container_name: bpe-mongodb
     restart: unless-stopped
     environment:

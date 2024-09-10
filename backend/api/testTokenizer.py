@@ -17,7 +17,7 @@ def allowed_file(filename):
   return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 class CreateTestTokenizer(Resource):
-  @jwt_required
+  @jwt_required()
   def post(self):
     # Request arguments
     args = create_test_tokenizer_args.parse_args()
@@ -43,7 +43,9 @@ class CreateTestTokenizer(Resource):
 
       # Ensure the selected model exists -> update tokenizer_tokens variable to contain the tokens of that model
       if database.models.find_one({"_id": ObjectId(tokenizer_id)}):
-        tokenizer_tokens = database.models.find_one({"_id": ObjectId(tokenizer_id)}, {"tokens": 1})
+        tokenizer_tokens_db = dict(database.models.find_one({"_id": ObjectId(tokenizer_id)}, {"tokens": 1}))
+        for token in tokenizer_tokens_db["tokens"]:
+          tokenizer_tokens.append(token)  
       else:
         return {"error": "Selected model does not exist"}, 400
       
@@ -54,14 +56,7 @@ class CreateTestTokenizer(Resource):
       # Test name validation - cannot name 2 tests the same name
       if database.tests.find_one({"user_id": user_id, "name": name}):
         return {"error": "A test with that name already exists"}, 400
-        
-      # Make sure file exists
-      file_path = "bpe/uploads/testTokenizerFiles/"+input_file
-      if(not os.path.isfile(file_path)):
-        return {"error": f"File doesn't exist${file_path}"}, 400
       
-      # Request has passed all validation tests, continue:
-
       # Create entry in the test tokenizer database
       test_id = database.tests.insert_one(tokenized_test)
 
@@ -71,8 +66,14 @@ class CreateTestTokenizer(Resource):
       # Spawn new instance of the tokenization
       # If an input file was specified
       if(input_file != None):
+      
+        # Make sure file exists
+        file_path = "bpe/uploads/testTokenizerFiles/"+input_file
+        if(not os.path.isfile(file_path)):
+          return {"error": f"File doesn't exist${file_path}"}, 400
+
         print(f"[TOKENIZATION JOB]: {test_id} for {user_id} > Test File > {input_file}")
-        process = subprocess.Popen(['python', 'bpe/BPETesting.py', test_id, "file", "bpe/uploads/testTokenizerFiles/"+input_file, tokenizer_tokens], stdout=None, stderr=None)
+        process = subprocess.Popen(['python', 'bpe/BPETesting.py', test_id, "file", "bpe/uploads/testTokenizerFiles/"+input_file] + tokenizer_tokens, stdout=None, stderr=None)
         
         # Add test ID to user db entry
         query_filter = {'_id': ObjectId(user_id)}
@@ -81,9 +82,12 @@ class CreateTestTokenizer(Resource):
 
         return {"message": "Test job created, tokenization started", 'test_id': test_id}, 200
       else:
+        
+
+        
         # If input text was specified
         print(f"[TOKENIZATION JOB]: {test_id} for {user_id} > Text Input")
-        process = subprocess.Popen(['python', 'bpe/BPETesting.py', test_id, "text", input_text, tokenizer_tokens])
+        sprocess = subprocess.Popen(['python', 'bpe/BPETesting.py', test_id, "text", input_text] + tokenizer_tokens)
         
         # Add test ID to user db entry
         query_filter = {'_id': ObjectId(user_id)}
@@ -125,6 +129,7 @@ class TokenizerFinishedTesting(Resource):
         "tokenization_time": tokenization_time,
         "statistics": statistics
       }}
+      database.tests.update_one(query_filter, update_operation)
 
       print(f"[TOKENIZATION JOB]: {test_id} completed in {tokenization_time}s")
 
@@ -134,7 +139,7 @@ class TokenizerFinishedTesting(Resource):
 
 
 class UploadTestFile(Resource):
-  @jwt_required
+  @jwt_required()
   def post(self):
     if 'file' not in request.files:
       return {'error': 'No file part'}, 400
@@ -175,7 +180,31 @@ class CheckTokenizationStatus(Resource):
     if test:
       # Check if the tokenizer is complete
       test_status = test.get('tokenized', 'false')
-      return {'test_id': test, "tokenized": test_status}, 200
+      is_file = test.get('input_file')
+      is_text = test.get('input_text')
+
+      # Return different response whether it was a file input or text input
+      if is_file:
+        output_file = test.get('output_file')
+        statistics = test.get('statistics')
+        tokenization_time = test.get('tokenization_time')
+        return {
+                "tokenized": test_status, 
+                "output_file": output_file, 
+                "statistics": statistics,
+                "tokenization_time": tokenization_time
+                }, 200
+      elif is_text:
+        statistics = test.get('statistics')
+        tokenized_text_html = test.get('tokenized_text')['html_body']
+        tokenization_time = test.get('tokenization_time')
+        return {
+          "tokenized": test_status,
+          "statistics": statistics,
+          "tokenization_time": tokenization_time,
+          "tokenized_text_html": tokenized_text_html
+        }, 200
+
     else:
       return {'error': "Test not found"}, 404
 
@@ -187,14 +216,13 @@ class CheckTokenizationStatus(Resource):
 check_tokenization_args =  reqparse.RequestParser()
 check_tokenization_args.add_argument("test_id", type=str, help="Test ID Missing", location="json", required=True)
 
-
 # Tokenizer finished testing arguments
 finish_testing_args = reqparse.RequestParser()
 finish_testing_args.add_argument("_id", type=str, help="ID Missing", location="json", required=True)
 finish_testing_args.add_argument("tokenization_time", type=float, help="Tokenization time missing", location="json", required=True)
-finish_testing_args.add_argument("tokenized_text", type=str, help="Tokenized text missing", location="json", required=False)
+finish_testing_args.add_argument("tokenized_text", type=dict, help="Tokenized text missing", location="json", required=False)
 finish_testing_args.add_argument("output_file", type=str, help="Output file missing", location="json", required=False)
-finish_testing_args.add_argument("statistics", type=str, help="Statistics missing", location="json", required=True)
+finish_testing_args.add_argument("statistics", type=dict, help="Statistics missing", location="json", required=True)
 
 # Create test arguments
 create_test_tokenizer_args = reqparse.RequestParser()
