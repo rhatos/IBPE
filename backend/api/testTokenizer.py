@@ -154,12 +154,8 @@ class UploadTestFile(Resource):
       original_filename = secure_filename(file.filename)
       base_filename, file_extension = os.path.splitext(original_filename)
 
-      # Epoch time
-      upload_time = int(time.time())
-
       # Construct the pattern to match user files
-      # Add on upload time for cleanup later
-      user_file = f"{username}_{base_filename}_{upload_time}{file_extension}"
+      user_file = f"{username}_{base_filename}_{file_extension}"
       file_path = os.path.join(UPLOAD_FOLDER, user_file)
 
       file.save(file_path)

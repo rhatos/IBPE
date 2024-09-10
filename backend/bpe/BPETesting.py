@@ -133,10 +133,10 @@ class BPETesting:
         return array1 + array2 + array3
     
     def write_to_file(self):
-        # determine change filepath
-        "bpe/uploads/testTokenizerFiles/userID_filename_1"
-        self.output_file = self.filename[:4] + "outputs" + self.filename[30:]
-        with open(self.output_filename+"tokenised_text", "w", encoding="utf-8") as file:
+        # Write output to output folder with epoch time attached for auto deletion later
+        file_creation_time = int(time.time())
+        self.output_file = "bpe/outputs/testing/"+str(file_creation_time)+"_tokenized_"+self.filename.split("/")[3] 
+        with open(self.output_file, "w", encoding="utf-8") as file:
             file.write(" ".join(self.tokenised_text))
 
     def create_json_from_html_output(self):
@@ -182,6 +182,16 @@ class BPETesting:
             for i in self.words[word]:
                 self.tokenised_text[i] = formatted_word
                 self.html_output[i] = tokenised_word
+    
+    def delete_file(self):
+        """Delete the file saved to the given filepath."""
+        file_path = os.path.join(self.filename) 
+        # Only delete file if the file exists, otherwise display error
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"File deleted successfully: {file_path}")
+        else:
+            print(f"File not found: {file_path}")
 
     def main(self):
         """Main function to run BPE tokenizer."""
@@ -200,7 +210,8 @@ class BPETesting:
             html_json = self.create_json_from_html_output()
             response = requests.post(BASE + "api/tokenizer-test/complete", json={"_id": test_id, "tokenization_time": elapsed_time, "tokenized_text": html_json, "statistics": statistics_json})
         else:
-            response = requests.post(BASE + "api/tokenizer-test/complete", json={"_id": test_id, "tokenization_time": elapsed_time, "output_file": self.output_filename, "statistics": statistics_json})
+            response = requests.post(BASE + "api/tokenizer-test/complete", json={"_id": test_id, "tokenization_time": elapsed_time, "output_file": self.output_file, "statistics": statistics_json})
+        self.delete_file()
 
 if __name__ == "__main__":
     print("Starting BPE Testing...")
