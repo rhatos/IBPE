@@ -1,9 +1,9 @@
 import os
-from flask import Flask, jsonify, request
+from flask import Flask
 from flask_restful import Api, Resource
 from api.users import UserRegistration, UserLogin, UserLogoutAccess, UserLogoutRefresh, TokenRefresh
 from api.tokenizer import CheckTrainingStatus, CreateNewTokenizer, TokenizerFinishedTraining, DeleteTokenizer, UpdateTokenizer, UploadTrainingFile
-from api.testTokenizer import CreateTestTokenizer, TokenizerFinishedTesting, CheckTokenizationStatus, UploadTestFile
+from api.testTokenizer import CreateTestTokenizer, TokenizerFinishedTesting, CheckTokenizationStatus, UploadTestFile, DownloadTestOutput
 from api.viewModels import GetTrainedModels
 from flask_jwt_extended import JWTManager
 from dotenv import dotenv_values
@@ -50,38 +50,29 @@ def revoked_token_response(jwt_header, jwt_payload):
 # API
 api = Api(app)
 
-# Add api routes
+# User endpoints
 api.add_resource(UserRegistration, "/api/user/register")
 api.add_resource(UserLogin, "/api/user/login")
 api.add_resource(UserLogoutAccess, "/api/user/logout/access")
 api.add_resource(UserLogoutRefresh, "/api/user/logout/refresh")
 api.add_resource(TokenRefresh, "/api/user/token/refresh")
 
-# Create tokenizer endpoints
-api.add_resource(CreateNewTokenizer, "/api/tokenizer/create")
-api.add_resource(TokenizerFinishedTraining, "/api/tokenizer/complete")
-# Delete tokenizer endpoint
-api.add_resource(DeleteTokenizer, "/api/tokenizer/delete")
+# Train tokenizer endpoints
+api.add_resource(CreateNewTokenizer, "/api/tokenizer/create")                   # Train new tokenizer endpoint
+api.add_resource(TokenizerFinishedTraining, "/api/tokenizer/complete")          # Tokenizer finished training endpoint
+api.add_resource(DeleteTokenizer, "/api/tokenizer/delete")                      # Delete tokenizer endpoint
+api.add_resource(UpdateTokenizer, "/api/tokenizer/update")                      # Update tokenizer endpoint
+api.add_resource(UploadTrainingFile, "/api/tokenizer/upload")                   # Upload Tokenizer endpoint
+api.add_resource(CheckTrainingStatus, "/api/tokenizer/status")                  # Check tokenizer status endpoint
+api.add_resource(GetTrainedModels, "/api/tokenizer/models")                     # View Models endpoint
 
-# Update tokenizer endpoint
-api.add_resource(UpdateTokenizer, "/api/tokenizer/update")
-# Upload Tokenizer endpoint
-api.add_resource(UploadTrainingFile, "/api/tokenizer/upload")
-# Check tokenizer status endpoint
-api.add_resource(CheckTrainingStatus, "/api/tokenizer/status")
-
-# View Models endpoint
-api.add_resource(GetTrainedModels, "/api/tokenizer/models")
 
 # Test tokenizer endpoints
-api.add_resource(CreateTestTokenizer, "/api/tokenizer-test/create")
-api.add_resource(TokenizerFinishedTesting, "/api/tokenizer-test/complete")
-
-# Check tokenizer status endpoint
-api.add_resource(CheckTokenizationStatus, "/api/tokenizer-test/status")
-
-# Upload test file endpoint
-api.add_resource(UploadTestFile, "/api/tokenizer-test/upload")
+api.add_resource(CreateTestTokenizer, "/api/tokenizer-test/create")             # Tokenize a text endpoint
+api.add_resource(TokenizerFinishedTesting, "/api/tokenizer-test/complete")      # Tokenizer finished tokenization endpoint
+api.add_resource(CheckTokenizationStatus, "/api/tokenizer-test/status")         # Check tokenizer status endpoint
+api.add_resource(UploadTestFile, "/api/tokenizer-test/upload")                  # Upload test file endpoint
+api.add_resource(DownloadTestOutput, "/api/tokenizer-test/download")            # Download tokenized output
 
 # APS Scheduler for deleting files after n time
 # NB: This has weird behaviour when running in debug mode on flask, it will essentially fire a job twice
