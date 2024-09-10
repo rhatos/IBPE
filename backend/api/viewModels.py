@@ -5,14 +5,10 @@ from database import database
 from models import Tokenizer
 
 class GetTrainedModels(Resource):
-  @jwt_required
+  @jwt_required()
   def get(self):
     # Get username from JWT header
     username = get_jwt_identity()
-    
-    ##args = get_models_args.parse_args()
-    ##username = args.get('username')
-    
     
     # Get user object from the db
     user = database.users.find_one({"username": username})
@@ -40,8 +36,6 @@ class GetTrainedModels(Resource):
         num_models+=1
       
       return {"num_of_models": num_models, "models": model_list}, 200
-
-
     
-##get_models_args =  reqparse.RequestParser()
-##get_models_args.add_argument("username", type=str, help="Test ID Missing", location="json", required=True)
+    else:
+      return {"error": "User not found"}, 404
