@@ -110,8 +110,8 @@ def read_tokens_in_db(tokeniser_id, expected_tokens):
     
 
 def train_test(jwt_token, file_path, name, subword_count, user_id, training_file, expected_tokens):
-    #upload file
     upload_training_file(jwt_token, file_path)
+    
     create_url = "http://127.0.0.1:5000/api/tokenizer/create"
     trained_status = "http://127.0.0.1:5000/api/tokenizer/status"
 
