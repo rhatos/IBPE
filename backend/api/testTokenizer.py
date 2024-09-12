@@ -85,7 +85,7 @@ class CreateTestTokenizer(Resource):
 
         # If input text was specified
         print(f"[TOKENIZATION JOB]: {test_id} for {user_id} > Text Input")
-        sprocess = subprocess.Popen(['python', 'bpe/BPETesting.py', test_id, "text", input_text] + tokenizer_tokens)
+        sprocess = subprocess.Popen(['python', 'bpe/BPETesting.py', test_id, "text", input_text] + tokenizer_tokens, stdout=None, stderr=None)
         
         # Add test ID to user db entry
         query_filter = {'_id': ObjectId(user_id)}
@@ -243,11 +243,11 @@ class CheckTokenizationStatus(Resource):
 
 # Download output arguments
 download_test_args = reqparse.RequestParser()
-download_test_args.add_argument("test_id", type=str, help="Test ID Missing", location="json", required=True)
+download_test_args.add_argument("test_id", type=str, help="Test ID Missing", location="args", required=True)
 
 # Check Tokenization arguments
 check_tokenization_args = reqparse.RequestParser()
-check_tokenization_args.add_argument("test_id", type=str, help="Test ID Missing", location="json", required=True)
+check_tokenization_args.add_argument("test_id", type=str, help="Test ID Missing", location="args", required=True)
 
 # Tokenizer finished testing arguments
 finish_testing_args = reqparse.RequestParser()

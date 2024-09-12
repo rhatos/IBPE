@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import CorpusUpload from "./inputs/CorpusUpload";
 import SelectTokenizer from "./inputs/SelectTokenizer";
 import TestCorpusTextArea from "./inputs/TestCorpusTextArea";
-import { Link } from "react-router-dom";
 import PencilSVG from "../assets/svgs/PencilSVG";
 
 const TokenizeMenu = () => {
@@ -14,13 +14,16 @@ const TokenizeMenu = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); 
   const [error, setError] = useState<string | null>(null);
   const [selectedTokenizer, setSelectedTokenizer] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [polling, setPolling] = useState(false);
+  const navigate = useNavigate();
 
   const resetFormState = () => {
     setFileOptionSelected(false);
     setTokenizerSelected(false);
     setSelectedTokenizer('');
     setTestTitle('Test 1');
-    setFileUploaded(null)
+    setFileUploaded(null);
     setTextInput("");
     setIsButtonDisabled(true);
     setError(null);
@@ -58,7 +61,7 @@ const TokenizeMenu = () => {
             test_name: testTitle,
             input_file: fileUploaded,
           }
-        }else {
+        } else {
            requestData = {
             tokenizer_id: selectedTokenizer,
             test_name: testTitle,
@@ -80,7 +83,9 @@ const TokenizeMenu = () => {
         const data = await response.json();
         if (response.ok) {
           console.log('Test created successfully:', data);
-          resetFormState();
+          setIsLoading(true);
+          setPolling(true);
+          startPolling(data.test_id);
         } else {
           setError(data.error || 'Failed to test.');
           setIsButtonDisabled(true);
@@ -91,6 +96,60 @@ const TokenizeMenu = () => {
       }
     }
   };
+
+  const startPolling = (testId: string) => {
+    const intervalId = setInterval(async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/api/tokenizer-test/status?test_id=${testId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        if (data.tokenized) {
+          clearInterval(intervalId);
+          resetFormState();
+          const type = isFileOptionSelected ? 'file' : 'text';
+          navigate("/user/tests/tokenized", { state: { data: data, type: type, testId: testId } });
+        }
+      } catch (error) {
+        console.error("Error during polling:", error);
+      }
+    }, 400);
+  };
+
+  if (isLoading) {
+    return (
+      <>
+      <style>
+      {`
+        .loader {
+          border: 8px solid #f3f3f3; /* Light grey */
+          border-top: 8px solid #4CAF50; /* Green */
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}
+    </style>
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h2 className="text-3xl font-medium text-white">Your model is being tested and tokenized</h2>
+        <p className="text-md font-light text-gray-300 mt-4">This could take up to 15 seconds</p>
+        <div className="mt-10">
+          <div className="loader"></div>
+        </div>
+      </div>
+      
+      </>
+    );
+  }
 
   return (
     <div className="flex-col space-y-10">
@@ -107,7 +166,6 @@ const TokenizeMenu = () => {
         ) : (
           <TestCorpusTextArea text={textInput} setText={setTextInput} />
         )}
-
 
         <div className="flex space-x-4 items-center justify-center">
           <button
@@ -152,7 +210,6 @@ const TokenizeMenu = () => {
       </div>
 
       <div className="flex justify-center items-center pb-8">
-        {/* <Link to="/user/tests/tokenized"> */}
           <button
             onClick={handleTestButtonClick}
             disabled={isButtonDisabled}>
@@ -164,7 +221,6 @@ const TokenizeMenu = () => {
               <p className="text-sm">Tokenize text</p>
             </div>
           </button>
-        {/* </Link> */}
         {error && (
           <div className="mt-4 bg-red-500 text-white p-2 rounded-md">
             {error}
