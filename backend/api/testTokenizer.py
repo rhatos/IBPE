@@ -82,9 +82,7 @@ class CreateTestTokenizer(Resource):
 
         return {"message": "Test job created, tokenization started", 'test_id': test_id}, 200
       else:
-        
 
-        
         # If input text was specified
         print(f"[TOKENIZATION JOB]: {test_id} for {user_id} > Text Input")
         sprocess = subprocess.Popen(['python', 'bpe/BPETesting.py', test_id, "text", input_text] + tokenizer_tokens)
@@ -261,7 +259,6 @@ finish_testing_args.add_argument("statistics", type=dict, help="Statistics missi
 
 # Create test arguments
 create_test_tokenizer_args = reqparse.RequestParser()
-create_test_tokenizer_args.add_argument("user_id", type=str, help="User ID Missing", location="json", required=True)
 create_test_tokenizer_args.add_argument("tokenizer_id", type=str, help="Model ID Missing", location="json", required=True)
 create_test_tokenizer_args.add_argument("test_name", type=str, help="Test name Missing", location="json", required=True)
 create_test_tokenizer_args.add_argument("input_text", type=str, help="Input text Missing", location="json", required=False)

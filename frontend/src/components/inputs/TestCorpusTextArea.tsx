@@ -1,7 +1,11 @@
-import { useState } from "react";
+import React from "react";
 
-const TestCorpusTextArea: React.FC = () => {
-  const [text, setText] = useState<string>("");
+interface TestCorpusTextAreaProps {
+  text: string;
+  setText: (text: string) => void;
+}
+
+const TestCorpusTextArea: React.FC<TestCorpusTextAreaProps> = ({ text, setText }) => {
   const maxWords = 200;
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

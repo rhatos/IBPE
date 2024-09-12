@@ -28,7 +28,25 @@ const CorpusUpload: React.FC<CorpusUploadProps> = ({ type, onUpload }) =>{
           const formData = new FormData();
           formData.append('file', selectedFile);
           const token = localStorage.getItem('token');
-
+          if (type == "test") {
+            const response = await fetch('http://127.0.0.1:5000/api/tokenizer-test/upload', {
+              method: 'POST',
+              body: formData,
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+            const data = await response.json();
+            if (response.ok) {
+              console.log(data.file_name)
+              setUploadedFileName(data.file_name);
+              onUpload(data.file_name)
+            } else {
+              setError(data.error);
+              setUploadedFileName(null);
+              onUpload(null)
+            }
+          } else {
           const response = await fetch('http://127.0.0.1:5000/api/tokenizer/upload', {
             method: 'POST',
             body: formData,
@@ -46,16 +64,16 @@ const CorpusUpload: React.FC<CorpusUploadProps> = ({ type, onUpload }) =>{
             setUploadedFileName(null);
             onUpload(null)
           }
-        } catch (err) {
-          console.error('Error uploading file:', err);
-          setError('Error uploading file.');
-          setUploadedFileName(null);
-          onUpload(null)
         }
+      } catch (err) {
+        console.error('Error uploading file:', err);
+        setError('Error uploading file.');
+        setUploadedFileName(null);
+        onUpload(null)
       }
     }
-  };
-
+  }
+}
   return (
     <div className="bg-bpelightgrey flex flex-col w-[40rem] rounded-md h-[19rem] items-center justify-center p-8">
       <span className="text-white">
