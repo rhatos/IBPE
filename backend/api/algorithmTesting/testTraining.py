@@ -182,10 +182,22 @@ def run_all_training_tests():
     success = train_test(jwt_token=jwt, file_path=file, name=tokeniser_name, subword_count=subword_size, user_id=id, training_file=training_corpus, expected_tokens=expected_tokens)
     test4 = success
 
+    # Test 5:
+    file = "10mil words.txt" 
+    tokeniser_name = "Tokeniser5"
+    subword_size=100
+    id = "66d719eccda7a42b28a3c21f"
+    training_corpus = "Ronald_10mil_words.txt"
+    originalTokeniser = bpe.BPEoriginal()
+    expected_tokens = originalTokeniser.main(subword_size, file)
+    success = train_test(jwt_token=jwt, file_path=file, name=tokeniser_name, subword_count=subword_size, user_id=id, training_file=training_corpus, expected_tokens=expected_tokens)
+    test5 = success
+
     with open("testOutput.txt", "w", encoding="utf-8") as file:
         file.write(f"Test 1: {test1}\n")
         file.write(f"Test 2: {test2}\n")
         file.write(f"Test 3: {test3}\n")
         file.write(f"Test 4: {test4}\n")
+        file.write(f"Test 5: {test5}\n")
 
 run_all_training_tests()

@@ -69,7 +69,7 @@ def run_all_training_tests():
 
     # Test 1:
     user_id = "66d719eccda7a42b28a3c21f"
-    tokeniser_id = "66e2fb1783c6c17a018edd85"
+    tokeniser_id = "66e30f487e627567830f797f"
     test_name = "test 1"
     input_text = "text"
     input_file = "This is the text I want to tokenise"
