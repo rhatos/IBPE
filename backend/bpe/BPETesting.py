@@ -200,7 +200,7 @@ class BPETesting:
         self.process_input()
         self.tokenise()
         statistics_json = self.process_statistics()
-        self.write_to_file()
+        
         end_time = time.perf_counter()
         elapsed_time = end_time - start_time
         print(f"Elapsed Time: {elapsed_time:.6f} seconds")
@@ -210,8 +210,9 @@ class BPETesting:
             html_json = self.create_json_from_html_output()
             response = requests.post(BASE + "api/tokenizer-test/complete", json={"_id": test_id, "tokenization_time": elapsed_time, "tokenized_text": html_json, "statistics": statistics_json})
         else:
+            self.write_to_file()
             response = requests.post(BASE + "api/tokenizer-test/complete", json={"_id": test_id, "tokenization_time": elapsed_time, "output_file": self.output_file, "statistics": statistics_json})
-        self.delete_file()
+            self.delete_file()
 
 if __name__ == "__main__":
     print("Starting BPE Testing...")
