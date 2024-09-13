@@ -193,6 +193,11 @@ def run_all_training_tests():
     success = train_test(jwt_token=jwt, file_path=file, name=tokeniser_name, subword_count=subword_size, user_id=id, training_file=training_corpus, expected_tokens=expected_tokens)
     test5 = success
 
+    # Test 6: vocab size = 10k, corpus = 10k words (1min))
+    # Test 7: vocab size = 10k, corpus = 100k words (1min)
+    # Test 8: vocab size = 10k, corpus = 1mil words (30 seconds)
+    # Test 9: Chinese corpus (check time)
+
     with open("testOutput.txt", "w", encoding="utf-8") as file:
         file.write(f"Test 1: {test1}\n")
         file.write(f"Test 2: {test2}\n")
