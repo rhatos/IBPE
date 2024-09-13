@@ -34,7 +34,6 @@ class BPETesting:
             self.process_text()
         self.vocab = set(sys.argv[5:])
        
-
     def delete_file(self):
         """Delete the file saved to the given filepath."""
         file_path = os.path.join(self.filename) 
@@ -176,12 +175,12 @@ class BPETesting:
                     k = 0
                 if tokenised_word[i] not in self.vocabulary_used and tokenised_word[i].lower() in self.vocab:
                     self.vocabulary_used.add(tokenised_word[i])
-                tokenised_word[i] = f"<span style='color:{self.colours[k]}'>{tokenised_word[i]}</span>"
+                tokenised_word[i] = f"<span style='background-color:{self.colours[k]}; color:white'>{tokenised_word[i]}</span>"
                 k += 1
                 
             for i in self.words[word]:
                 self.tokenised_text[i] = formatted_word
-                self.html_output[i] = tokenised_word
+                self.html_output[i] = tokenised_word.append(" ")
     
     def delete_file(self):
         """Delete the file saved to the given filepath."""
