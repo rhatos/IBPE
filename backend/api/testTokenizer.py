@@ -78,12 +78,10 @@ class CreateTestTokenizer(Resource):
 
         return {"message": "Test job created, tokenization started", 'test_id': test_id}, 200
       else:
-        
 
-        
         # If input text was specified
         print(f"[TOKENIZATION JOB]: {test_id} for {user_id} > Text Input")
-        sprocess = subprocess.Popen(['python', 'bpe/BPETesting.py', test_id, "text", input_text] + tokenizer_tokens)
+        sprocess = subprocess.Popen(['python', 'bpe/BPETesting.py', test_id, "text", input_text] + tokenizer_tokens, stdout=None, stderr=None)
         
         # Add test ID to user db entry
         query_filter = {'_id': ObjectId(user_id)}
@@ -241,11 +239,11 @@ class CheckTokenizationStatus(Resource):
 
 # Download output arguments
 download_test_args = reqparse.RequestParser()
-download_test_args.add_argument("test_id", type=str, help="Test ID Missing", location="json", required=True)
+download_test_args.add_argument("test_id", type=str, help="Test ID Missing", location="args", required=True)
 
 # Check Tokenization arguments
 check_tokenization_args = reqparse.RequestParser()
-check_tokenization_args.add_argument("test_id", type=str, help="Test ID Missing", location="json", required=True)
+check_tokenization_args.add_argument("test_id", type=str, help="Test ID Missing", location="args", required=True)
 
 # Tokenizer finished testing arguments
 finish_testing_args = reqparse.RequestParser()
@@ -257,7 +255,6 @@ finish_testing_args.add_argument("statistics", type=dict, help="Statistics missi
 
 # Create test arguments
 create_test_tokenizer_args = reqparse.RequestParser()
-create_test_tokenizer_args.add_argument("user_id", type=str, help="User ID Missing", location="json", required=True)
 create_test_tokenizer_args.add_argument("tokenizer_id", type=str, help="Model ID Missing", location="json", required=True)
 create_test_tokenizer_args.add_argument("test_name", type=str, help="Test name Missing", location="json", required=False)
 create_test_tokenizer_args.add_argument("input_text", type=str, help="Input text Missing", location="json", required=False)

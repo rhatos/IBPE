@@ -16,10 +16,11 @@ class BPETesting:
         self.tokenised_text = []
         self.html_output = []
         self.words = defaultdict(list)          # {word: index of word in file}
-        self.colours = ["#970c10", "#c40c0c", "#e02401", "#d2001a", "#c63d2f", "#e25e3e", "#f76e11", "#f88f01", "#f7a440", "#ffbb5c", "#ffd88a", "#c9dabf", "#9ca986", "#739072", "#808d7c", "#5f6f65", "#4f6f52", "#166088", "#345e7d", "#6482ad", "#7fa1c3", "#a2c4e0", "#c0d6df", "#dbe9ee"]
+        self.colours = ["#D04848", "#ED9455", '#5F6F65',"#6482AD", "624E88"]
         self.vocabulary_used = set()
         self.token_count = 0
         self.word_count = 0
+        self.character_count = 0
 
     def process_input(self):
         """Process the input arguments"""
@@ -31,10 +32,10 @@ class BPETesting:
         else:
             # if the input type is a text then set the text input and process the text
             self.text_input = sys.argv[3]
+            self.character_count = len(self.text_input)
             self.process_text()
         self.vocab = set(sys.argv[5:])
        
-
     def delete_file(self):
         """Delete the file saved to the given filepath."""
         file_path = os.path.join(self.filename) 
@@ -52,6 +53,7 @@ class BPETesting:
         with open(self.filename, "r", encoding="utf-8") as file:
             # read the file line by line
             line = file.readline()
+            self.character_count = len(file.read())
             while line:
                 # remove special characters and split into words with corresponding word frequency
                 for word in line.split(split_char):
@@ -156,6 +158,7 @@ class BPETesting:
         ratio = self.token_count / self.word_count
         percentage = len(self.vocabulary_used) / len(self.vocab)
         json_object = {
+                "character_count": self.character_count,
                 "no_tokens": no_tokens,
                 "ratio": ratio,
                 "percentage": percentage,
@@ -172,17 +175,17 @@ class BPETesting:
             # html output formatting
             for i in range(len(tokenised_word)):
                 # if tokenised_word[i] in self.vocab:
-                if k >= 24:
+                if k >= 4:
                     k = 0
                 if tokenised_word[i] not in self.vocabulary_used and tokenised_word[i].lower() in self.vocab:
                     self.vocabulary_used.add(tokenised_word[i])
-                tokenised_word[i] = f"<span style='color:{self.colours[k]}'>{tokenised_word[i]}</span>"
+                tokenised_word[i] = f"<span style='background-color:{self.colours[k]}; color:white'>{tokenised_word[i]}</span>"
                 k += 1
                 
             for i in self.words[word]:
                 self.tokenised_text[i] = formatted_word
+                tokenised_word.append(' ')
                 self.html_output[i] = tokenised_word
-    
     def delete_file(self):
         """Delete the file saved to the given filepath."""
         file_path = os.path.join(self.filename) 
@@ -200,7 +203,7 @@ class BPETesting:
         self.process_input()
         self.tokenise()
         statistics_json = self.process_statistics()
-        self.write_to_file()
+        
         end_time = time.perf_counter()
         elapsed_time = end_time - start_time
         print(f"Elapsed Time: {elapsed_time:.6f} seconds")
@@ -210,8 +213,9 @@ class BPETesting:
             html_json = self.create_json_from_html_output()
             response = requests.post(BASE + "api/tokenizer-test/complete", json={"_id": test_id, "tokenization_time": elapsed_time, "tokenized_text": html_json, "statistics": statistics_json})
         else:
+            self.write_to_file()
             response = requests.post(BASE + "api/tokenizer-test/complete", json={"_id": test_id, "tokenization_time": elapsed_time, "output_file": self.output_file, "statistics": statistics_json})
-        self.delete_file()
+            self.delete_file()
 
 if __name__ == "__main__":
     print("Starting BPE Testing...")
