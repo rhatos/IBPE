@@ -20,6 +20,7 @@ class BPETesting:
         self.vocabulary_used = set()
         self.token_count = 0
         self.word_count = 0
+        self.character_count = 0
 
     def process_input(self):
         """Process the input arguments"""
@@ -31,6 +32,7 @@ class BPETesting:
         else:
             # if the input type is a text then set the text input and process the text
             self.text_input = sys.argv[3]
+            self.character_count = len(self.text_input)
             self.process_text()
         self.vocab = set(sys.argv[5:])
        
@@ -52,6 +54,7 @@ class BPETesting:
         with open(self.filename, "r", encoding="utf-8") as file:
             # read the file line by line
             line = file.readline()
+            self.character_count = len(file.read())
             while line:
                 # remove special characters and split into words with corresponding word frequency
                 for word in line.split(split_char):
@@ -156,6 +159,7 @@ class BPETesting:
         ratio = self.token_count / self.word_count
         percentage = len(self.vocabulary_used) / len(self.vocab)
         json_object = {
+                "character_count": self.character_count,
                 "no_tokens": no_tokens,
                 "ratio": ratio,
                 "percentage": percentage,
