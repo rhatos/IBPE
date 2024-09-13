@@ -184,8 +184,8 @@ class BPETesting:
                 
             for i in self.words[word]:
                 self.tokenised_text[i] = formatted_word
-                self.html_output[i] = tokenised_word.append(" ")
-    
+                tokenised_word.append(' ')
+                self.html_output[i] = tokenised_word
     def delete_file(self):
         """Delete the file saved to the given filepath."""
         file_path = os.path.join(self.filename) 
