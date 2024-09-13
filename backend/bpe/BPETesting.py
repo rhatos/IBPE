@@ -16,7 +16,7 @@ class BPETesting:
         self.tokenised_text = []
         self.html_output = []
         self.words = defaultdict(list)          # {word: index of word in file}
-        self.colours = ["#970c10", "#c40c0c", "#e02401", "#d2001a", "#c63d2f", "#e25e3e", "#f76e11", "#f88f01", "#f7a440", "#ffbb5c", "#294b29", "#114232", "102C57", "#304463", "#9ca986", "#739072", "#808d7c", "#5f6f65", "#4f6f52", "#166088", "#345e7d", "#6482ad", "#7fa1c3", "#a2c4e0"]
+        self.colours = ["#D04848", "#ED9455", '#5F6F65',"#6482AD", "624E88"]
         self.vocabulary_used = set()
         self.token_count = 0
         self.word_count = 0
