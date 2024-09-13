@@ -53,10 +53,6 @@ class CreateTestTokenizer(Resource):
       if(input_text == None and input_file == None):
         return {"error": "No input text or file specified"}, 400
 
-      # Test name validation - cannot name 2 tests the same name
-      if database.tests.find_one({"user_id": user_id, "name": name}):
-        return {"error": "A test with that name already exists"}, 400
-      
       # Create entry in the test tokenizer database
       test_id = database.tests.insert_one(tokenized_test)
 
