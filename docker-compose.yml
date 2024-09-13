@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: mongo:4.4.6
+    image: mongo
     container_name: bpe-mongodb
     restart: unless-stopped
     environment:
@@ -10,7 +10,22 @@ services:
       - 27017:27017
     volumes:
       - mongodata:/data/db
+    networks:
+      - capstone
+  backend:
+    build: ./backend
+    ports:
+      - 5000:5000
+    volumes: [./backend:/app]
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_RUN_HOST=0.0.0.0
+    networks:
+      - capstone
 
 volumes:
   mongodata:
     driver: local
+
+networks:
+  capstone: {}

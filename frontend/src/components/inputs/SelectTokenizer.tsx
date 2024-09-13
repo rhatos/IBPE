@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import OpenArrow from "../../assets/svgs/OpenArrow";
-// import ModelItemDrawer from "./test_tokenizer_menu_drawer/ModelItemDrawer";
 
 interface SelectTokenizerProps {
   isTokenizerSelected: boolean;
-  tokenizerIsSelected: (selected: boolean) => void;
+  tokenizerIsSelected: (selected: boolean, tokenizer_id: string | null) => void;
 }
+
+interface Model {
+  _id: string | null;
+  name: string;
+  subword_vocab_count: number;
+}
+
+
 
 const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
   isTokenizerSelected,
@@ -13,11 +20,47 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
 }) => {
   const [tokenizerDrawerOpen, setTokenizerDrawerOpen] = useState(false);
   const [tokenizerName, setTokenizerName] = useState("");
+  const [models, setModels] = useState<Model[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleTokenizerSelect = (name: string, selected: boolean) => {
+  useEffect(() => {
+    if (tokenizerDrawerOpen) {
+      const fetchModels = async () => {
+        setLoading(true);
+        try {
+          const token = localStorage.getItem('token');
+          const response = await fetch('http://127.0.0.1:5000/api/tokenizer/models', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+          const data = await response.json();
+          if (response.ok) {
+            setModels(data.models);
+          } else {
+            console.error("Failed to fetch models:", data.error);
+          }
+        } catch (error) {
+          console.error("Error fetching models:", error);
+        }
+        setLoading(false);
+      };
+
+      fetchModels();
+    }
+  }, [tokenizerDrawerOpen]);
+
+  const formatVocabularyCount = (count: number) => {
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}k`;
+    }
+    return count.toString();
+  };
+
+  const handleTokenizerSelect = (name: string, _id: string | null) => {
     setTokenizerName(name);
     setTokenizerDrawerOpen(false);
-    tokenizerIsSelected(selected);
+    tokenizerIsSelected(!!_id, _id);
   };
 
   return (
@@ -33,38 +76,40 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
                 isTokenizerSelected ? "text-white" : "text-red-500"
               } font-inter text-sm`}
             >
-              {isTokenizerSelected ? tokenizerName : "Default Tokenizer"}
+              {isTokenizerSelected ? tokenizerName : "Select a tokenizer"}
             </p>
           </div>
         </div>
-        <button
-          onClick={() => setTokenizerDrawerOpen((prev) => !prev)}
-        >
+        <button onClick={() => setTokenizerDrawerOpen((prev) => !prev)}>
           <OpenArrow />
         </button>
       </div>
       {tokenizerDrawerOpen && (
         <div>
-          <li
-            onClick={() => handleTokenizerSelect("Model 1", true)}
-            className="flex flex-row h-12 border-b-2 border-white border-opacity-20 justify-between items-center bg-bpeblack hover:bg-bpelightgrey"
-          >
-            <div className="text-white font-inter text-sm pl-2">Model 1</div>
-            <div className="text-bpegreen font-inter text-xs pr-2">
-              2.2K Vocabulary
-            </div>
-          </li>
-          <li
-            onClick={() => handleTokenizerSelect("Default", false)}
-            className="flex flex-row h-12 border-b-2 border-white border-opacity-20 justify-between items-center bg-bpeblack hover:bg-bpelightgrey"
-          >
-            <div className="text-red-500 font-inter text-sm pl-2">
-              Default Tokenizer
-            </div>
-            <div className="text-bpegreen font-inter text-xs pr-2">
-              10K Vocabulary
-            </div>
-          </li>
+          {loading ? (
+            <p className="text-white font-inter text-sm">Loading models...</p>
+          ) : (
+            models.length > 0 ? (
+              models
+                .filter(model => model.name !== tokenizerName)
+                .map((model) => (
+                  <li
+                    key={model._id}
+                    onClick={() => handleTokenizerSelect(model.name, model._id)}
+                    className="flex flex-row h-12 border-b-2 border-white border-opacity-20 justify-between items-center bg-bpeblack hover:bg-bpelightgrey"
+                  >
+                    <div className="text-white font-inter text-sm pl-2">
+                      {model.name}
+                    </div>
+                    <div className="text-bpegreen font-inter text-xs pr-2">
+                      {formatVocabularyCount(model.subword_vocab_count)} Vocabulary
+                    </div>
+                  </li>
+                ))
+            ) : (
+              <p className="text-white font-inter text-sm">No models found</p>
+            )
+          )}
         </div>
       )}
     </div>
