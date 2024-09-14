@@ -39,13 +39,13 @@ class CreateTestTokenizer(Resource):
     if database.users.find_one({"_id": ObjectId(user_id)}):
       
       # Tokens of the selected model
-      tokenizer_tokens = []
+      tokenizer_tokens = ['']
 
       # Ensure the selected model exists -> update tokenizer_tokens variable to contain the tokens of that model
       if database.models.find_one({"_id": ObjectId(tokenizer_id)}):
         tokenizer_tokens_db = dict(database.models.find_one({"_id": ObjectId(tokenizer_id)}, {"tokens": 1}))
         for token in tokenizer_tokens_db["tokens"]:
-          tokenizer_tokens.append(token)  
+          tokenizer_tokens.append(token)
       else:
         return {"error": "Selected model does not exist"}, 400
       

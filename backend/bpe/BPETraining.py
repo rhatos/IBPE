@@ -53,6 +53,7 @@ class BPETraining():
         # create a dictionary of a word divided into a tuple of letters as the key and the frequency as the value arranged from highest to lowest frequency
         self.sorted_word_freq = sorted([(tuple(word[:-1]) + (word[-1]+'</w>',), freq) for word, freq in self.word_freq.items()], key=lambda x: x[1], reverse=True)
 
+
     def find_initial_pair_freq(self):
         """Iterate through each word, iterate through each letter in that word to create pairs to add to pair_freq and grouped_pairs"""
         for i, (letters, freq) in enumerate(self.sorted_word_freq):

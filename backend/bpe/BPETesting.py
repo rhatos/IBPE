@@ -31,7 +31,7 @@ class BPETesting:
             self.open_file()
         else:
             # if the input type is a text then set the text input and process the text
-            self.text_input = sys.argv[3]
+            self.text_input = sys.argv[3].encode('utf-8').decode('utf-8')
             self.character_count = len(self.text_input)
             self.process_text()
         self.vocab = set(sys.argv[5:])
@@ -48,27 +48,63 @@ class BPETesting:
 
     def open_file(self):
         """Open file and split corpus into words"""
+        flag = True
+        strip_chars = '\r\n'
         split_char = ' '
-        i = 0       # index of word in file
+        line_num = 0
+        i = 0  # index of word in file
         with open(self.filename, "r", encoding="utf-8") as file:
-            # read the file line by line
-            line = file.readline()
-            self.character_count = len(file.read())
-            while line:
+            lines = file.readlines()  # Read all lines at once
+            self.character_count = sum(len(line) for line in lines)  # Calculate character count
+            
+            for line in lines:
+                # Trim leading and trailing whitespace from the line
+                line = line.strip()
+                
+                if not line:  # Skip empty lines
+                    continue
+                
+                if line_num == 0:
+                    # Remove all the spaces in the front of the file
+                    while flag:
+                        if line.startswith(' '):
+                            line = line[1:]
+                        else:
+                            flag = False
+
                 # remove special characters and split into words with corresponding word frequency
-                for word in line.split(split_char):
+                for word in line.strip(strip_chars).split(split_char):
                     if word:
-                        # add a word to the dictionary, including the words index in the file
+                        # add a word to the dictionary, including the word's index in the file
                         self.words[word].append(i)
                     i += 1
-                line = file.readline()
-        # create empty lists to add tokenised works to the correct indexes later
+                line_num += 1
+                
+        # create empty lists to add tokenized words to the correct indexes later
         self.tokenised_text = [None] * i
         self.html_output = [None] * i
         self.word_count = i
 
+
+
     def process_text(self):
         """Process text input and split into words"""
+        # remove spaces from the front and back of the text input
+        flag = True
+        while flag:
+            for i in range(len(self.text_input)):
+                if self.text_input[0] == ' ':
+                    self.text_input = self.text_input[1:]
+                else:
+                    flag = False
+        flag = True
+        while flag:
+            for i in range(len(self.text_input)):
+                if self.text_input[len(self.text_input) - 1] == ' ':
+                    self.text_input = self.text_input[:-1]
+                else:
+                    flag = False
+                    
         split_char = ' '
         i = 0       # index of word in file
         for word in self.text_input.split(split_char):
@@ -102,7 +138,8 @@ class BPETesting:
         return largest_combinations
 
 
-    def recursive_algorithm(self, vocabulary, word):
+    def recursive_algorithm(self, vocabulary, word, original_length):
+        # word = str(word, 'utf-8')
         # Base case: Empty word
         if len(word) == 0:
             return []
@@ -112,6 +149,8 @@ class BPETesting:
         for i in range(len(word)):
             for j in range(i + 1, len(word) + 1):
                 current_sequence = word[i:j]
+                if j == (original_length):
+                    current_sequence += "</w>"
                 combinations.append((current_sequence, i, j))
 
         largest_combinations = self.find_combination(combinations, vocabulary)
@@ -129,9 +168,9 @@ class BPETesting:
         end_idx = largest_combinations[0][2]
 
         # recursively call the function with both left and right branches
-        array1 = self.recursive_algorithm(vocabulary, word[:start_idx])
+        array1 = self.recursive_algorithm(vocabulary, word[:start_idx], original_length)
         array2 = [found_combination]
-        array3 = self.recursive_algorithm(vocabulary, word[end_idx:])
+        array3 = self.recursive_algorithm(vocabulary, word[end_idx:], original_length-end_idx)
         return array1 + array2 + array3
     
     def write_to_file(self):
@@ -170,14 +209,18 @@ class BPETesting:
         """Train BPE tokenizer on corpus by running the recursive function on each word."""
         k = 0
         for word in self.words.keys():
-            tokenised_word = self.recursive_algorithm(self.vocab, word)
+            # check if the whole word is in the vocab or it needs to be broken up into tokens
+            original_length = len(word)
+            tokenised_word = self.recursive_algorithm(self.vocab, word, original_length)
             formatted_word = "_".join(tokenised_word).strip('_')
+            if formatted_word[-4:] == "</w>":
+                formatted_word = formatted_word[:-4]
             # html output formatting
             for i in range(len(tokenised_word)):
                 # if tokenised_word[i] in self.vocab:
                 if k >= 4:
                     k = 0
-                if tokenised_word[i] not in self.vocabulary_used and tokenised_word[i].lower() in self.vocab:
+                if tokenised_word[i] not in self.vocabulary_used and tokenised_word[i] in self.vocab:
                     self.vocabulary_used.add(tokenised_word[i])
                 tokenised_word[i] = f"<span style='background-color:{self.colours[k]}; color:white'>{tokenised_word[i]}</span>"
                 k += 1
@@ -186,6 +229,7 @@ class BPETesting:
                 self.tokenised_text[i] = formatted_word
                 tokenised_word.append(' ')
                 self.html_output[i] = tokenised_word
+                
     def delete_file(self):
         """Delete the file saved to the given filepath."""
         file_path = os.path.join(self.filename) 
