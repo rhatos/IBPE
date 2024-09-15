@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CorpusUpload from "./inputs/CorpusUpload";
 import SelectTokenizer from "./inputs/SelectTokenizer";
 import TestCorpusTextArea from "./inputs/TestCorpusTextArea";
 import PencilSVG from "../assets/svgs/PencilSVG";
 
 const TokenizeMenu = () => {
+
+  const location = useLocation();
+  const modelsPageModelId = location.state?.modelId;
+  const modelsPageName = location.state?.name;
   const [isFileOptionSelected, setFileOptionSelected] = useState(false);
   const [isTokenizerSelected, setTokenizerSelected] = useState(false);
   const [testTitle, setTestTitle] = useState('Test 1');
@@ -188,9 +192,9 @@ const TokenizeMenu = () => {
       </div>
 
       <div className="flex flex-col space-y-10 items-center justify-center">
-        <SelectTokenizer isTokenizerSelected={isTokenizerSelected} tokenizerIsSelected={handleTokenizerSelection} />
+        <SelectTokenizer isTokenizerSelected={isTokenizerSelected} tokenizerIsSelected={handleTokenizerSelection} modelsPageModelId={modelsPageModelId} modelsPageName={modelsPageName} />
       </div>
-
+      
       <div className="flex flex-col space-y-10 items-center justify-center">
         <div className="flex flex-row bg-bpelightgrey p-3 space-x-1 rounded-md items-center justify-center">
           <div className="flex flex-col space-y-1 max-w-md justify-left items-start">

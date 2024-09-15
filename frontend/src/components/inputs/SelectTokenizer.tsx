@@ -4,24 +4,38 @@ import OpenArrow from "../../assets/svgs/OpenArrow";
 interface SelectTokenizerProps {
   isTokenizerSelected: boolean;
   tokenizerIsSelected: (selected: boolean, tokenizer_id: string | null) => void;
+  modelsPageModelId?: string | undefined;
+  modelsPageName?: string | undefined;
 }
 
 interface Model {
   _id: string | null;
   name: string;
   subword_vocab_count: number;
+  trained: boolean;
 }
-
-
 
 const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
   isTokenizerSelected,
-  tokenizerIsSelected
+  tokenizerIsSelected,
+  modelsPageModelId,
+  modelsPageName,
 }) => {
   const [tokenizerDrawerOpen, setTokenizerDrawerOpen] = useState(false);
   const [tokenizerName, setTokenizerName] = useState("");
   const [models, setModels] = useState<Model[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const checkPreviousSelection = () => {
+    if (modelsPageModelId && modelsPageName) {
+      setTokenizerName(modelsPageName);
+      tokenizerIsSelected(!!modelsPageModelId, modelsPageModelId);
+    }
+  }
+
+  useEffect(() => {
+    checkPreviousSelection();
+  }, [modelsPageModelId, modelsPageName]);
 
   useEffect(() => {
     if (tokenizerDrawerOpen) {
@@ -91,7 +105,7 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
           ) : (
             models.length > 0 ? (
               models
-                .filter(model => model.name !== tokenizerName)
+                .filter(model => model.name !== tokenizerName && model.trained)
                 .map((model) => (
                   <li
                     key={model._id}
