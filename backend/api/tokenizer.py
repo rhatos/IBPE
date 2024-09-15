@@ -73,7 +73,9 @@ class DeleteTokenizer(Resource):
     args = delete_tokenizer_args.parse_args()
 
     tokenizer_id = args.get("tokenizer_id")
-    user_id = args.get("user_id")
+    username = get_jwt_identity()
+    user = database.users.find_one({"username": username})
+    user_id = str(user['_id'])
 
     # Find user and delete model id from trained_models
     if(database.users.find_one({'_id': ObjectId(user_id)})):
@@ -103,7 +105,9 @@ class UpdateTokenizer(Resource):
     args = update_tokenizer_args.parse_args()
 
     tokenizer_id = args.get("tokenizer_id")
-    user_id = args.get("user_id")
+    username = get_jwt_identity()
+    user = database.users.find_one({"username": username})
+    user_id = str(user['_id'])
     tokenizer_new_name = args.get("tokenizer_new_name")
 
     # Find model to update
@@ -224,12 +228,10 @@ create_tokenizer_args.add_argument("training_file", type=str, location="json", r
 # Delete Tokenizer Args
 delete_tokenizer_args = reqparse.RequestParser()
 delete_tokenizer_args.add_argument("tokenizer_id", type=str, help="Tokenizer id missing", location="json", required=True)
-delete_tokenizer_args.add_argument("user_id", type=str, help="User id missing", location="json", required=True)
 
 # Update Tokenizer Args
 update_tokenizer_args = reqparse.RequestParser()
 update_tokenizer_args.add_argument("tokenizer_id", type=str, help="Tokenizer id missing", location="json", required=True)
-update_tokenizer_args.add_argument("user_id", type=str, help="User id missing", location="json", required=True)
 update_tokenizer_args.add_argument("tokenizer_new_name", type=str, help="New name missing", location="json", required=True)
 
 # Check Training Status Args
