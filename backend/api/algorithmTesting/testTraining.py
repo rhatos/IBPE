@@ -160,7 +160,7 @@ def run_all_training_tests():
     success = train_test(jwt_token=jwt, file_path=file, name=tokeniser_name, subword_count=subword_size, user_id=id, training_file=training_corpus, expected_tokens=expected_tokens)
     test2 = success
 
-    # Test 3:
+    # Test 3: Test 4: vocab size = 10k, corpus = 1mil words (30 seconds)
     file = "one_million_words_1.txt" 
     tokeniser_name = "Tokeniser3"
     subword_size=10000
@@ -171,7 +171,7 @@ def run_all_training_tests():
     success = train_test(jwt_token=jwt, file_path=file, name=tokeniser_name, subword_count=subword_size, user_id=id, training_file=training_corpus, expected_tokens=expected_tokens)
     test3 = success
 
-    # Test 4:
+    # Test 4: vocab size = 10k, corpus = 1mil words (30 seconds)
     file = "one_million_words_2.txt" 
     tokeniser_name = "Tokeniser4"
     subword_size=10000
@@ -182,10 +182,10 @@ def run_all_training_tests():
     success = train_test(jwt_token=jwt, file_path=file, name=tokeniser_name, subword_count=subword_size, user_id=id, training_file=training_corpus, expected_tokens=expected_tokens)
     test4 = success
 
-    # Test 5:
+    # vocab size = 10k, corpus = 1mil words (30 seconds)
     file = "10mil words.txt" 
     tokeniser_name = "Tokeniser5"
-    subword_size=100
+    subword_size=10000
     id = "66d719eccda7a42b28a3c21f"
     training_corpus = "Ronald_10mil_words.txt"
     originalTokeniser = bpe.BPEoriginal()
@@ -193,9 +193,27 @@ def run_all_training_tests():
     success = train_test(jwt_token=jwt, file_path=file, name=tokeniser_name, subword_count=subword_size, user_id=id, training_file=training_corpus, expected_tokens=expected_tokens)
     test5 = success
 
-    # Test 6: vocab size = 10k, corpus = 10k words (1min))
-    # Test 7: vocab size = 10k, corpus = 100k words (1min)
-    # Test 8: vocab size = 10k, corpus = 1mil words (30 seconds)
+    # Test 6: vocab size = 10k, corpus = 10k words (1min)) English
+    file = "10k_words.txt" 
+    tokeniser_name = "Tokeniser6"
+    subword_size=10000
+    id = "66d719eccda7a42b28a3c21f"
+    training_corpus = "Ronald_10k_words.txt"
+    originalTokeniser = bpe.BPEoriginal()
+    expected_tokens = originalTokeniser.main(subword_size, file)
+    success = train_test(jwt_token=jwt, file_path=file, name=tokeniser_name, subword_count=subword_size, user_id=id, training_file=training_corpus, expected_tokens=expected_tokens)
+    test6 = success
+    # Test 7: vocab size = 10k, corpus = 100k words (1min) Xhosa
+    file = "100k_words.txt" 
+    tokeniser_name = "Tokeniser7"
+    subword_size=10000
+    id = "66d719eccda7a42b28a3c21f"
+    training_corpus = "Ronald_100k_words.txt"
+    originalTokeniser = bpe.BPEoriginal()
+    expected_tokens = originalTokeniser.main(subword_size, file)
+    success = train_test(jwt_token=jwt, file_path=file, name=tokeniser_name, subword_count=subword_size, user_id=id, training_file=training_corpus, expected_tokens=expected_tokens)
+    test7 = success
+
     # Test 9: Chinese corpus (check time)
 
     with open("testOutput.txt", "w", encoding="utf-8") as file:
@@ -204,5 +222,7 @@ def run_all_training_tests():
         file.write(f"Test 3: {test3}\n")
         file.write(f"Test 4: {test4}\n")
         file.write(f"Test 5: {test5}\n")
+        file.write(f"Test 6: {test6}\n")
+        file.write(f"Test 7: {test7}\n")
 
 run_all_training_tests()
