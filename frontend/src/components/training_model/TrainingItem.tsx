@@ -58,22 +58,17 @@ const TrainingItem = ({ modelName, _id }: { modelName: string, _id: string }) =>
   }, [dispatch, _id, modelName]);
 
   return (
-    <div className="justify-center flex flex-col space-y-2 text-white border-b-2 border-opacity-10 border-gray-500 h-fit w-full p-1 pl-2">
-      <div className="flex space-x-2 ">
+    <div className="flex flex-col space-y-1 text-white border-b-2 border-opacity-10 border-gray-500 w-full p-2">
+      <div className="flex items-center justify-between">
         <p className="text-sm font-inter truncate max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
           {modelName}
         </p>
-        <div className="flex items-center pl-5">
-          <div className="relative h-2 w-52 bg-bpegrey dark:bg-bpelightgrey">
-            <div className="absolute h-2 w-0.5 right-2/3 bg-black"></div>
-            <div className="absolute h-2 w-0.5 right-1/3 bg-black"></div>
-            <div className="absolute h-2 w-0.5 right-3/3 bg-black"></div>
-            <div
-              className="h-2 bg-bpegreen transition-all duration-500"
-              ref={progressBarRef}
-              style={{ width: "10%" }}
-            ></div>
-          </div>
+        <div className="relative h-3 w-48 bg-bpegrey rounded-lg overflow-hidden">
+          <div
+            className="absolute top-0 left-0 h-full bg-bpegreen transition-all duration-700 ease-in-out"
+            ref={progressBarRef}
+            style={{ width: "10%" }}
+          ></div>
         </div>
       </div>
     </div>
