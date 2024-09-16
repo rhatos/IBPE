@@ -9,7 +9,7 @@ const TrainingModel = () => {
   const loggedIn = useSelector((state: RootState) => state.auth.loggedIn);
   const trainingQueue = useSelector((state: RootState) => state.trainingQueue.trainingQueue)
   const [isActive, setIsActive] = useState(false);
-  const minimize = isActive ? '' : 'h-1';
+  const maxHeight = isActive ? '200px' : '32px';
 
   useEffect(() => { // Check if there are items in the training queue
     if (trainingQueue.length > 0) {
@@ -24,13 +24,19 @@ const TrainingModel = () => {
       ):( // If logged in display training queue
       <div className="w-80 border-black rounded-lg m-8 drop-shadow-lg shadow-md flex">
           <div className="flex-col w-full">
-            <div className={minimize}>
+            <div 
+              className="flex overflow-hidden flex-col space-y-1 bg-bpeblack transition-all duration-300 ease-in-out"
+              style={{ maxHeight }}
+            >
             <div className="flex rounded-md rounded-b-none bg-bpelightgrey justify-between items-center">
               <p className="text-white font-inter pl-2 p-1 text-md">
                 Training Queue
               </p>
-              <span className="pr-2 cursor-pointer"
-              onClick={() => setIsActive(!isActive)} // Toggle the isActive state
+              <span
+                className={`pr-2 cursor-pointer transition-transform duration-300 ${
+                  isActive ? "rotate-0" : "rotate-180"
+                }`}
+                onClick={() => setIsActive(!isActive)} // Toggle the isActive state
               >
                 <OpenArrow />
               </span>
