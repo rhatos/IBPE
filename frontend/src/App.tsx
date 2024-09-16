@@ -12,6 +12,8 @@ import TrainingPage from "./pages/TrainingPage";
 import TokenizePage from "./pages/TokenizePage";
 import TrainedModelsPage from "./pages/TrainedModelsPage";
 import TokenizedTextPage from "./pages/TokenizedTextPage";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor } from "./store/store";
 
 
 const router = createBrowserRouter(
@@ -29,9 +31,9 @@ const router = createBrowserRouter(
 
 const App = () => {
   return (
-    <>
+    <PersistGate loading={null} persistor={persistor}>
       <RouterProvider router={router} />
-    </>
+    </PersistGate>
   );
 };
 

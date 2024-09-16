@@ -12,10 +12,10 @@ interface Model {
 }
 
 const TrainedModelsPage = () => {
-  // State to store the list of models
   const [models, setModels] = useState<Model[]>([]);
+  const [filteredModels, setFilteredModels] = useState<Model[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  // useEffect to fetch models when the component mounts
   useEffect(() => {
     const fetchModels = async () => {
       try {
@@ -37,9 +37,17 @@ const TrainedModelsPage = () => {
     };
 
     fetchModels(); // Call the function to fetch models
-  }, []); // Dependency array is empty, so this runs only on mount
+  }, []);
 
-  // Function to handle model change and re-fetch models after deletion
+  useEffect(() => {
+    // Filter models based on the search query
+    setFilteredModels(
+      models.filter((model) =>
+        model.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+  }, [searchQuery, models]);
+
   const handleModelChange = () => {
     const fetchModels = async () => {
       try {
@@ -71,9 +79,19 @@ const TrainedModelsPage = () => {
         </h1>
       </div>
 
+      <div className="flex flex-col space-y-2 mb-4"> {/* Search bar */}
+      <input
+        type="text"
+        placeholder="Search models..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="p-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400"
+      />
+      </div>
+
       <div className="flex flex-col space-y-2"> {/* List of trained models */}
-        {models.length > 0 ? ( // Check if there are any models to display
-          models.map((model) => ( // Map through models and render each as a TrainedModelItem component
+        {filteredModels.length > 0 ? ( // Check if there are any models to display
+          filteredModels.map((model) => ( // Map through models and render each as a TrainedModelItem component
             <TrainedModelItem
               key={model._id} // Unique key for each item
               name={model.name} // Pass model name
