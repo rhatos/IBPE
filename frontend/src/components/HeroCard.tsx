@@ -4,7 +4,7 @@ import { RootState } from "../store/store";
 
 const HeroCard = () => {
 
-  const loggedIn = useSelector((state: RootState) => state.auth.loggedIn);
+  const loggedIn = useSelector((state: RootState) => state.auth.loggedIn); // Check if the user is logged in
 
   return (
     <div className=" rounded-2xl  md:w-4/5 lg:w-3/5 xl:w-2/5 mx-auto ">
@@ -32,7 +32,7 @@ const HeroCard = () => {
             want, see the statistics of your tokenizer and view the tokenized
             version of your corpus!
           </p>
-          {!loggedIn && (
+          {!loggedIn && ( // Show the use default prompt if the user is not logged in, else show the training prompt
             <p className="text-white text-md font-inter font-light pb-4"><span className="font-medium text-bpegreen">Ready to tokenize?</span> Log in now to train and test your own models. New to tokenization? No problem! Experiment with our pre-trained defaults.</p>
           )}
           <TrainNowButton />

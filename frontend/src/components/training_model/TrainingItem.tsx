@@ -3,17 +3,20 @@ import { useEffect, useRef } from "react";
 import { AppDispatch } from "../../store/store";
 import { removeFromTrainingQueue } from "../../slices/trainingSlice";
 
-const TrainingItem = ({ modelName, _id }: { modelName: string, _id: string }) => {
+// Child Component of the TrainingModel component
+const TrainingItem = ({ modelName, _id }: { modelName: string, _id: string }) => { // Define the props for the component
   const dispatch: AppDispatch = useDispatch();
-  const progressBarRef = useRef<HTMLDivElement>(null);
-  const finalUpdateRef = useRef<boolean>(false);
+  const progressBarRef = useRef<HTMLDivElement>(null); // Ref for the progress bar
+  const finalUpdateRef = useRef<boolean>(false); // Ref to track if the final update has been made
 
-  useEffect(() => {
-    let filled = 10;
-    let isRunning = true;
+  useEffect(() => { // Effect to update the progress bar
+    let filled = 10; // Initial width of the progress bar
+    let isRunning = true; // Flag to track if the progress bar is still running
 
+    // Function to update the progress bar
     if (progressBarRef.current && isRunning) {
-      const interval = setInterval(async () => {
+      const interval = setInterval(async () => { // Interval to update the progress bar
+        // Fetch the status of the training process
         try {
           const response = await fetch(`http://127.0.0.1:5000/api/tokenizer/status?tokenizer_id=${_id}`, {
             method: 'GET',
@@ -23,23 +26,23 @@ const TrainingItem = ({ modelName, _id }: { modelName: string, _id: string }) =>
           });
 
           const data = await response.json();
-          if (response.ok) {
+          if (response.ok) { // Check if the training process is complete
             if (data.trained === 'true') {
               if (progressBarRef.current) {
-                progressBarRef.current.style.width = "100%";
+                progressBarRef.current.style.width = "100%"; // Set the width of the progress bar to 100%
               }
-              finalUpdateRef.current = true;
-              isRunning = false;
+              finalUpdateRef.current = true; // Set the flag to indicate that the final update has been made
+              isRunning = false; // Stop the progress bar
 
-              setTimeout(() => {
-                dispatch(removeFromTrainingQueue({ name: modelName, _id }));
-              }, 500);
+              setTimeout(() => { // Remove the item from the training queue after a delay
+                dispatch(removeFromTrainingQueue({ name: modelName, _id })); // Dispatch the action to remove the item from the training queue
+              }, 500); // Set a delay before removing the item from the training queue
 
-              clearInterval(interval);
+              clearInterval(interval); // Clear the interval
             } else {
-              filled = Math.min(filled + Math.max(1, 25 * Math.exp(-0.05 * filled)), 100);
+              filled = Math.min(filled + Math.max(1, 25 * Math.exp(-0.05 * filled)), 100); // Update the width of the progress bar using an exponential function
               if (progressBarRef.current) {
-                progressBarRef.current.style.width = `${filled}%`;
+                progressBarRef.current.style.width = `${filled}%`; // Set the width of the progress bar
               }
             }
           } else {

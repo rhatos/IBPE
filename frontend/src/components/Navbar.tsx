@@ -14,6 +14,9 @@ const Navbar: React.FC = () => {
     <div className="bg-bpeblack rounded-b-sm w-full mx-auto mb-8">
       <div className="flex justify-between items-center p-3">
         <div className="flex space-x-4 items-center">
+          {/* Logo
+            links to home          
+          */}
           <Link to="/home">
             <p className="text-xl text-white font-medium font-inter">
               Interactive <span className="text-bpegreen"> BPE</span> Tool
@@ -22,7 +25,7 @@ const Navbar: React.FC = () => {
         </div>
 
         <div className="flex space-x-4 items-center">
-          {loggedIn ? (
+          {loggedIn ? ( // if logged in, show user button, test model, train model, and models buttons
             <div className="flex space-x-5 items-center pr-3">
 
               <Link to="/user/model/tokenize">
@@ -45,7 +48,7 @@ const Navbar: React.FC = () => {
 
               <UserButton />
             </div>
-          ):(
+          ):( // if not logged in, show login and sign up buttons
             <div className="flex space-x-2 items-center">
               <LogInButton />
               <SignUpButton />

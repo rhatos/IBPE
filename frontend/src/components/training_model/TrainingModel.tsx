@@ -8,21 +8,20 @@ const TrainingModel = () => {
 
   const loggedIn = useSelector((state: RootState) => state.auth.loggedIn);
   const trainingQueue = useSelector((state: RootState) => state.trainingQueue.trainingQueue)
-
   const [isActive, setIsActive] = useState(false);
   const minimize = isActive ? '' : 'h-1';
 
-  useEffect(() => {
+  useEffect(() => { // Check if there are items in the training queue
     if (trainingQueue.length > 0) {
       setIsActive(true);
     }
-  }, [trainingQueue]);
+  }, [trainingQueue]); // Add trainingQueue as a dependency
 
   return (
     <div>
-      {!loggedIn ? (
+      {!loggedIn ? ( // If not logged in do not display training queue
       <div></div>
-      ):(
+      ):( // If logged in display training queue
       <div className="w-80 border-black rounded-lg m-8 drop-shadow-lg shadow-md flex">
           <div className="flex-col w-full">
             <div className={minimize}>
@@ -31,14 +30,14 @@ const TrainingModel = () => {
                 Training Queue
               </p>
               <span className="pr-2 cursor-pointer"
-              onClick={() => setIsActive(!isActive)}
+              onClick={() => setIsActive(!isActive)} // Toggle the isActive state
               >
                 <OpenArrow />
               </span>
             </div>
             <div className="flex overflow-auto flex-col space-y-1 bg-bpeblack h-28">
-              {trainingQueue.length > 0 && (
-                trainingQueue.map((item, index) => (
+              {trainingQueue.length > 0 && ( // Check if there are items in the training queue
+                trainingQueue.map((item, index) => ( // Map over the training queue and render each item
                   <TrainingItem key={index} modelName={item.name} _id={item._id} />
                 ))
               )}
