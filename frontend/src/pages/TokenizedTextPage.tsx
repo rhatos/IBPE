@@ -1,9 +1,10 @@
-import TokenizedTextOutput from "../components/TokenizedTextOutput";
+import TokenizedOutput from "../components/TokenizedOutput";
 
 const TokenizedTextPage = () => {
   return (
     <div className="flex flex-col justify-center items-center space-y-4">
-      <TokenizedTextOutput />
+      {/* Test TokenizedOutput component */}
+      <TokenizedOutput />
     </div>
   );
 };

@@ -1,12 +1,13 @@
+// frontend\src\components\modals\modal.tsx
 interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    children: React.ReactNode;
+    isOpen: boolean; // Add isOpen prop
+    onClose: () => void; // Add onClose prop
+    children: React.ReactNode; // Add children prop
   }
 
+// Generic modal component
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
-  
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
         <div className="bg-bpegrey rounded-lg p-6 relative w-3/4 max-w-3xl ">
