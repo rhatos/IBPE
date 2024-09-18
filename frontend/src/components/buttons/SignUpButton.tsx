@@ -128,7 +128,6 @@ const SignUpButton: React.FC = () => {
 
       {/* Modal component for sign-up form */}
       <Modal isOpen={isModalOpen} onClose={() => resetFormState()}>
-        {" "}
         {/* Modal is controlled by the isModalOpen state */}
         <h2 className="text-bpegreen text-lg font-semibold mb-4">Sign Up</h2>
         {/* Display error message if any */}
@@ -185,7 +184,6 @@ const SignUpButton: React.FC = () => {
             }`} // Button styles change based on whether it's disabled
             disabled={isButtonDisabled}
           >
-            {" "}
             {/* Button disabled based on state */}
             Sign Up
           </button>

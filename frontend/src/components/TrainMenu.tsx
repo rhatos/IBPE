@@ -102,7 +102,7 @@ const TrainMenu = () => {
           <h1 className="text-4xl font-inter font-medium text-white">
             <span className="text-bpegreen">Train</span> Tokenizer
           </h1>
-          <CorpusUpload type="train" onUpload={handleFileUpload} />{" "}
+          <CorpusUpload type="train" onUpload={handleFileUpload} />
           {/* File upload component */}
           {/* Model title input */}
           <div className="flex flex-row bg-bpelightgrey p-3 space-x-1 rounded-md items-center">

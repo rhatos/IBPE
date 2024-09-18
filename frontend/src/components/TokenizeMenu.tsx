@@ -201,7 +201,7 @@ const TokenizeMenu = () => {
             Your model is being tested and tokenized
           </h2>
           <p className="text-md font-light text-gray-300 mt-4">
-            This could take up to 15 seconds
+            This could take up to 60 seconds...
           </p>
           <div className="mt-10">
             <div className="loader"></div> {/* Loading spinner */}
