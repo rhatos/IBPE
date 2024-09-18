@@ -4,14 +4,7 @@ import { AppDispatch } from "../../store/store";
 import { removeFromTrainingQueue } from "../../slices/trainingSlice";
 
 // Child Component of the TrainingModel component
-const TrainingItem = ({
-  modelName,
-  _id,
-}: {
-  modelName: string;
-  _id: string;
-}) => {
-  // Define the props for the component
+const TrainingItem = ({ modelName, _id }: { modelName: string, _id: string }) => { // Define the props for the component
   const dispatch: AppDispatch = useDispatch();
   const progressBarRef = useRef<HTMLDivElement>(null); // Ref for the progress bar
   const finalUpdateRef = useRef<boolean>(false); // Ref to track if the final update has been made
@@ -26,8 +19,7 @@ const TrainingItem = ({
 
     // Function to update the progress bar
     if (progressBarRef.current && isRunning) {
-      const interval = setInterval(async () => {
-        // Interval to update the progress bar
+      const interval = setInterval(async () => { // Interval to update the progress bar
         // Fetch the status of the training process
         try {
           const response = await fetch(
@@ -41,35 +33,30 @@ const TrainingItem = ({
           );
 
           const data = await response.json();
-          if (response.ok) {
-            // Check if the training process is complete
-            if (data.trained === "true") {
+          if (response.ok) { // Check if the training process is complete
+            if (data.trained === 'true') {
               if (progressBarRef.current) {
                 progressBarRef.current.style.width = "100%"; // Set the width of the progress bar to 100%
               }
               finalUpdateRef.current = true; // Set the flag to indicate that the final update has been made
               isRunning = false; // Stop the progress bar
 
-              setTimeout(() => {
-                // Remove the item from the training queue after a delay
+              setTimeout(() => { // Remove the item from the training queue after a delay
                 dispatch(removeFromTrainingQueue({ name: modelName, _id })); // Dispatch the action to remove the item from the training queue
               }, 500); // Set a delay before removing the item from the training queue
 
               clearInterval(interval); // Clear the interval
             } else {
-              filled = Math.min(
-                filled + Math.max(1, 25 * Math.exp(-0.05 * filled)),
-                100
-              ); // Update the width of the progress bar using an exponential function
+              filled = Math.min(filled + Math.max(1, 25 * Math.exp(-0.05 * filled)), 100); // Update the width of the progress bar using an exponential function
               if (progressBarRef.current) {
                 progressBarRef.current.style.width = `${filled}%`; // Set the width of the progress bar
               }
             }
           } else {
-            console.error("Error fetching training status:", data.error);
+            console.error('Error fetching training status:', data.error);
           }
         } catch (err) {
-          console.error("Error checking training status:", err);
+          console.error('Error checking training status:', err);
         }
       }, 1000);
 
