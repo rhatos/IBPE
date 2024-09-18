@@ -78,45 +78,43 @@ const TrainedModelsPage = () => {
   };
 
   return (
-    <div className="w-2/5 mx-auto">
-      {" "}
-      {/* Center the content and restrict width */}
-      <div className="flex flex-col justify-center items-center space-y-4 pb-20">
-        {" "}
-        {/* Header section */}
+    <div className="w-2/5 mx-auto"> {/* Center the content and restrict width */}
+      <div className="flex flex-col justify-center items-center space-y-4 pb-20"> {/* Header section */}
         <h1 className="text-4xl font-inter font-medium text-white">
           <span className="text-bpegreen">Trained</span> Models
         </h1>
       </div>
-      <div className="flex flex-col space-y-2">
-        {" "}
-        {/* List of trained models */}
-        {models.length > 0 ? ( // Check if there are any models to display
-          models.map(
-            (
-              model // Map through models and render each as a TrainedModelItem component
-            ) => (
-              <TrainedModelItem
-                key={model._id} // Unique key for each item
-                name={model.name} // Pass model name
-                tokens={model.tokens} // Pass model vocabulary size
-                _id={model._id} // Pass model ID
-                trained={model.trained} // Pass model training status
-                training_time={model.training_time}
-                onChange={handleModelChange} // Pass change handler
-              />
-            )
-          )
+
+      <div className="flex flex-col space-y-2 mb-4"> {/* Search bar */}
+      <input
+        type="text"
+        placeholder="Search models..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="p-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400"
+      />
+      </div>
+
+      <div className="flex flex-col space-y-2"> {/* List of trained models */}
+        {filteredModels.length > 0 ? ( // Check if there are any models to display
+          filteredModels.map((model) => ( // Map through models and render each as a TrainedModelItem component
+            <TrainedModelItem
+              key={model._id} // Unique key for each item
+              name={model.name} // Pass model name
+              tokens={model.tokens} // Pass model vocabulary size
+              _id={model._id} // Pass model ID
+              trained={model.trained} // Pass model training status
+              training_time={model.training_time}
+              onChange={handleModelChange} // Pass change handler
+            />
+          ))
         ) : (
           <p className="text-white">No models found</p> // Show message if no models are found
         )}
       </div>
-      <div className="flex items-center justify-center p-4">
-        {" "}
-        {/* Button to add a new model */}
-        <Link to="/train">
-          {" "}
-          {/* Link to navigate to the "train" page */}
+
+      <div className="flex items-center justify-center p-4"> {/* Button to add a new model */}
+        <Link to="/train"> {/* Link to navigate to the "train" page */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
