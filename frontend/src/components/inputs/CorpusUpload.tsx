@@ -10,6 +10,9 @@ const CorpusUpload: React.FC<CorpusUploadProps> = ({ type, onUpload }) => {
   const [error, setError] = useState<string | null>(null); // State to track error messages
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null); // State to store uploaded file name
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null; // Get selected file
 
@@ -28,8 +31,8 @@ const CorpusUpload: React.FC<CorpusUploadProps> = ({ type, onUpload }) => {
 
           const uploadUrl =
             type === "test"
-              ? "http://172.29.163.22:5000/api/tokenizer-test/upload" // Upload URL for test data
-              : "http://172.29.163.22:5000/api/tokenizer/upload"; // Upload URL for training data
+              ? `${apiUrl}/api/tokenizer-test/upload` // Upload URL for test data
+              : `${apiUrl}/api/tokenizer/upload`; // Upload URL for training data
 
           const response = await fetch(uploadUrl, {
             method: "POST",

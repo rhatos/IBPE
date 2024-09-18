@@ -14,6 +14,9 @@ const TrainMenu = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Controls the disabled state of the train button
   const [error, setError] = useState<string | null>(null); // Stores any error messages
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
   // Reset the form state to default values
   const resetFormState = () => {
     setName("Model 1");
@@ -57,17 +60,14 @@ const TrainMenu = () => {
 
         const token = localStorage.getItem("token"); // Get the auth token from localStorage
 
-        const response = await fetch(
-          "http://172.29.163.22:5000/api/tokenizer/create",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(requestData),
-          }
-        );
+        const response = await fetch(`${apiUrl}/api/tokenizer/create`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(requestData),
+        });
 
         const data = await response.json();
 

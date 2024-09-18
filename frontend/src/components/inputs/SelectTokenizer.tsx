@@ -29,6 +29,9 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
   const [models, setModels] = useState<Model[]>([]); // State to store the list of models
   const [loading, setLoading] = useState(false); // State to track the loading state
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
   // Function to toggle the visibility of the tokenizer drawer
   const checkPreviousSelection = () => {
     if (modelsPageModelId && modelsPageName) {
@@ -52,18 +55,13 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
           const token = localStorage.getItem("token"); // Get the token from local storage
           let response;
           if (!token) {
-            response = await fetch(
-              "http://172.29.163.22:5000/api/tokenizer/models"
-            );
+            response = await fetch(`${apiUrl}/api/tokenizer/models`);
           } else {
-            response = await fetch(
-              "http://172.29.163.22:5000/api/tokenizer/models",
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
+            response = await fetch(`${apiUrl}/api/tokenizer/models`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
           }
           const data = await response.json();
           if (response.ok) {

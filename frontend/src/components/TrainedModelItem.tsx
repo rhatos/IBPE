@@ -32,6 +32,9 @@ const TrainedModelItem = ({
   const [isEditing, setIsEditing] = useState(false); // State to control edit mode
   const [newName, setNewName] = useState(name); // State to hold the edited name
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
   // Handle delete button click
   const handleDeleteClick = async () => {
     try {
@@ -41,17 +44,14 @@ const TrainedModelItem = ({
         tokenizer_id: _id, // Model ID to be deleted
       };
 
-      const response = await fetch(
-        "http://172.29.163.22:5000/api/tokenizer/delete",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(requestData),
-        }
-      );
+      const response = await fetch(`${apiUrl}/api/tokenizer/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(requestData),
+      });
 
       const data = await response.json();
 
@@ -78,20 +78,17 @@ const TrainedModelItem = ({
       try {
         const token = localStorage.getItem("token");
 
-        const response = await fetch(
-          "http://172.29.163.22:5000/api/tokenizer/update",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              tokenizer_id: _id,
-              tokenizer_new_name: newName,
-            }),
-          }
-        );
+        const response = await fetch(`${apiUrl}/api/tokenizer/update`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            tokenizer_id: _id,
+            tokenizer_new_name: newName,
+          }),
+        });
 
         const data = await response.json();
 

@@ -27,6 +27,9 @@ const TokenizeMenu = () => {
   const [isLoading, setIsLoading] = useState(false); // State to track if loading animation should be shown
   const navigate = useNavigate();
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
   // Function to reset all form-related states
   const resetFormState = () => {
     setFileOptionSelected(false);
@@ -106,29 +109,23 @@ const TokenizeMenu = () => {
         if (loggedIn) {
           const token = localStorage.getItem("token"); // Retrieve authentication token from localStorage
           // Send the request to the backend to create a tokenizer test
-          response = await fetch(
-            "http://172.29.163.22:5000/api/tokenizer-test/create",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify(requestData),
-            }
-          );
+          response = await fetch(`${apiUrl}/api/tokenizer-test/create`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(requestData),
+          });
         } else {
           // Send the request to the backend to create a tokenizer test
-          response = await fetch(
-            "http://172.29.163.22:5000/api/tokenizer-test/create",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(requestData),
-            }
-          );
+          response = await fetch(`${apiUrl}/api/tokenizer-test/create`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+          });
         }
         const data = await response.json(); // Parse JSON response
         if (response.ok) {
@@ -154,7 +151,7 @@ const TokenizeMenu = () => {
     const intervalId = setInterval(async () => {
       try {
         const response = await fetch(
-          `http://172.29.163.22:5000/api/tokenizer-test/status?test_id=${testId}`,
+          `${apiUrl}/api/tokenizer-test/status?test_id=${testId}`,
           {
             method: "GET",
             headers: {
