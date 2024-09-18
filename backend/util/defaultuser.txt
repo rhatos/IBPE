@@ -1,0 +1,9 @@
+{
+  "username": "system",
+  "email": "system@system.system",
+  "password": "$pbkdf2-sha256$29000$2HtvzZlzTkkp5dy7N8ZYCw$0yitshSC3AKHdylcFAJzJV/sBCEM975T9J0",
+  "models": [
+  ],
+  "tokenized_texts": [
+  ]
+}
