@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 interface TrainedModelItemProps {
   _id: string | null; // The ID of the trained model
   name: string; // Name of the model
-  tokens: Array<string>; // Subword vocabulary count (number of tokens)
+  subword_vocab_count: number; // Subword vocabulary count (number of tokens)
   trained: boolean; // Whether the model is trained or still in training
   training_time: number; // Time taken to train the model
   onChange: () => void; // Callback function when the model is deleted
@@ -14,19 +14,19 @@ interface TrainedModelItemProps {
 // Function to format the vocabulary count for display
 const formatVocabularyCount = (count: number) => {
   if (count >= 1000) {
-    return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}k`; // Format to 'k' for thousands
+    return `${(count / 1000).toFixed(1).replace(/\.0$/, "")}k`; // Format to 'k' for thousands
   }
   return count.toString();
 };
 
 // Main component definition
 const TrainedModelItem = ({
-  name, 
-  tokens, 
-  _id, 
-  trained, 
+  name,
+  subword_vocab_count,
+  _id,
+  trained,
   training_time,
-  onChange 
+  onChange,
 }: TrainedModelItemProps) => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false); // State to control edit mode
@@ -38,10 +38,10 @@ const TrainedModelItem = ({
   // Handle delete button click
   const handleDeleteClick = async () => {
     try {
-      const token = localStorage.getItem('token'); // Retrieve token from localStorage
+      const token = localStorage.getItem("token"); // Retrieve token from localStorage
 
       const requestData = {
-        tokenizer_id: _id // Model ID to be deleted
+        tokenizer_id: _id, // Model ID to be deleted
       };
 
       const response = await fetch(`${apiUrl}/api/tokenizer/delete`, {
@@ -56,15 +56,14 @@ const TrainedModelItem = ({
       const data = await response.json();
 
       if (!response.ok) {
-        console.log('Failed to delete model:', data.error);
+        console.log("Failed to delete model:", data.error);
         return;
       } else {
         onChange(); // Call the onDelete callback to update the UI
-        console.log('Model deleted successfully:', data);
+        console.log("Model deleted successfully:", data);
       }
-      
     } catch (error) {
-      console.error('Error during deletion:', error);
+      console.error("Error during deletion:", error);
     }
   };
 
@@ -97,11 +96,11 @@ const TrainedModelItem = ({
           setIsEditing(false); // Exit edit mode
           onChange(); // Call the onDelete callback to update the UI
         } else {
-          console.log('Failed to update model:', data.error);
+          console.log("Failed to update model:", data.error);
           onChange(); // Call the onDelete callback to update the UI
         }
       } catch (error) {
-        console.error('Error during update:', error);
+        console.error("Error during update:", error);
         onChange(); // Call the onDelete callback to update the UI
       }
     } else {
@@ -111,7 +110,7 @@ const TrainedModelItem = ({
 
   // Handle Enter key press to submit the new name
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleEditClick();
     }
   };
@@ -133,7 +132,9 @@ const TrainedModelItem = ({
           ) : (
             <>
               <h1 className="text-white font-inter text-xl">
-                {name} {!trained && <span className="text-red-500">(Training)</span>} {/* Display (Training) if model is not trained */}
+                {name}{" "}
+                {!trained && <span className="text-red-500">(Training)</span>}{" "}
+                {/* Display (Training) if model is not trained */}
               </h1>
               <button
                 onClick={handleEditClick}
@@ -146,18 +147,26 @@ const TrainedModelItem = ({
         </div>
         <div className="flex flex-row space-x-2 items-center">
           <p className="text-white font-inter text-sm">Vocabulary Size:</p>
-          <span className="text-bpegreen font-inter text-sm">{formatVocabularyCount(tokens.length)}</span> {/* Formatted vocabulary count */}
+          <span className="text-bpegreen font-inter text-sm">
+            {formatVocabularyCount(subword_vocab_count)}
+          </span>{" "}
+          {/* Formatted vocabulary count */}
           <span className="text-white font-inter text-xs">(Tokens)</span>
         </div>
         <div className="flex flex-row space-x-2 items-center">
           <p className="text-white font-inter text-sm">Training Time</p>
-          <span className="text-bpegreen font-inter text-sm">{training_time.toPrecision(4)}s</span> {/* Formatted Training Time */}
+          <span className="text-bpegreen font-inter text-sm">
+            {training_time.toPrecision(4)}s
+          </span>{" "}
+          {/* Formatted Training Time */}
         </div>
       </div>
       <div className="flex flex-col text-black items-center justify-center p-4 space-y-2">
         <button
           className={`flex items-center w-20 drop-shadow-lg text-sm rounded-md h-8 font-inter justify-center ${
-            trained ? 'bg-bpegreen hover:bg-green-500' : 'bg-gray-300 cursor-not-allowed'
+            trained
+              ? "bg-bpegreen hover:bg-green-500"
+              : "bg-gray-300 cursor-not-allowed"
           }`} // Disable button if model is not trained
           onClick={handleTestClick}
           disabled={!trained} // Disable the button if the model is not trained
