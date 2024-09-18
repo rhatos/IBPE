@@ -13,7 +13,7 @@ interface SelectTokenizerProps {
 interface Model {
   _id: string | null;
   name: string;
-  tokens: Array<string>;
+  subword_vocab_count: number;
   trained: boolean;
 }
 
@@ -38,7 +38,7 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
       setTokenizerName(modelsPageName);
       tokenizerIsSelected(!!modelsPageModelId, modelsPageModelId);
     }
-  }
+  };
 
   // Fetch the list of models when the component mounts, and modelsPageModelId/ modelsPageName is passed from view models page
   useEffect(() => {
@@ -47,7 +47,8 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
 
   // Function to handle the selection of a tokenizer
   useEffect(() => {
-    if (tokenizerDrawerOpen) { // If the tokenizer drawer is open, fetch the list of models
+    if (tokenizerDrawerOpen) {
+      // If the tokenizer drawer is open, fetch the list of models
       const fetchModels = async () => {
         setLoading(true); // Set the loading state to true
         try {
@@ -63,7 +64,8 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
             });
           }
           const data = await response.json();
-          if (response.ok) { // If the response is successful, set the list of models
+          if (response.ok) {
+            // If the response is successful, set the list of models
             setModels(data.models);
           } else {
             console.error("Failed to fetch models:", data.error);
@@ -81,7 +83,7 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
   // Function to format the vocabulary count
   const formatVocabularyCount = (count: number) => {
     if (count >= 1000) {
-      return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}k`; // Format the vocabulary count as a string with a thousand separator
+      return `${(count / 1000).toFixed(1).replace(/\.0$/, "")}k`; // Format the vocabulary count as a string with a thousand separator
     }
     return count.toString();
   };
@@ -111,8 +113,8 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
             </p>
           </div>
         </div>
-        <button onClick={() => setTokenizerDrawerOpen((prev) => !prev)}> 
-          <OpenArrow /> 
+        <button onClick={() => setTokenizerDrawerOpen((prev) => !prev)}>
+          <OpenArrow />
         </button>
       </div>
       {/* Tokenizer Drawer to display the list of models */}
@@ -120,11 +122,14 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
         <div>
           {loading ? (
             <p className="text-white font-inter text-sm">Loading models...</p> // If the loading state is true, display a loading message
-          ) : ( // If the loading state is false, render the list of models
-            models.length > 0 ? ( // If the list of models is not empty, render the list of models
-              models
-                .filter(model => model.name !== tokenizerName && model.trained) // Filter out the selected tokenizer
-                .map((model) => ( // Map over the list of models
+          ) : // If the loading state is false, render the list of models
+          models.length > 0 ? ( // If the list of models is not empty, render the list of models
+            models
+              .filter((model) => model.name !== tokenizerName && model.trained) // Filter out the selected tokenizer
+              .map(
+                (
+                  model // Map over the list of models
+                ) => (
                   <li // Render a list item for each model
                     key={model._id}
                     onClick={() => handleTokenizerSelect(model.name, model._id)} // Call the handleTokenizerSelect function when the list item is clicked
@@ -134,13 +139,14 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
                       {model.name}
                     </div>
                     <div className="text-bpegreen font-inter text-xs pr-2">
-                      {formatVocabularyCount(model.tokens.length)} Vocabulary
+                      {formatVocabularyCount(model.subword_vocab_count)}{" "}
+                      Vocabulary
                     </div>
                   </li>
-                ))
-            ) : (
-              <p className="text-white font-inter text-sm">No models found</p> // If the list of models is empty, render a message
-            )
+                )
+              )
+          ) : (
+            <p className="text-white font-inter text-sm">No models found</p> // If the list of models is empty, render a message
           )}
         </div>
       )}
