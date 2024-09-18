@@ -10,8 +10,8 @@ services:
       - 27017:27017
     volumes:
       - mongodata:/data/db
-    networks:
-      - capstone
+    network_mode: "host"
+
   backend:
     build: ./backend
     ports:
@@ -20,12 +20,22 @@ services:
     environment:
       - FLASK_APP=app.py
       - FLASK_RUN_HOST=0.0.0.0
-    networks:
-      - capstone
+    network_mode: "host"
+
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - 5173:5173
+    volumes:
+      - "./frontend:/app"
+    command: ["npm", "run", "dev", "--host"]
+    network_mode: "host"
 
 volumes:
   mongodata:
     driver: local
 
 networks:
-  capstone: {}
+  capstone:
+    driver: host

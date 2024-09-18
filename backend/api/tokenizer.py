@@ -11,31 +11,51 @@ import os.path
 UPLOAD_FOLDER = 'bpe/uploads/tokenizerTrainingFiles'
 ALLOWED_EXTENSIONS = {'txt'}
 
-# Helper function to check allowed file extensions
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+  """
+    Helper function to check allowed file extensions.
+  """
+  return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Creating new tokenizer request
 class CreateNewTokenizer(Resource):
+  """
+    Resource class used to implement the create tokenizer API endpoint.
+  """
   @jwt_required()
   def post(self):
+    """
+      Enables this endpoint to accept a post request from the frontend.
+
+      Creates a new tokenizer db entry and spawns an instance of the training python file
+      with the given arguments.
+    """
+    
     args = create_tokenizer_args.parse_args()
 
     # Get arguments specified by frontend
     name = args.get("name")
     subword_vocab_count = args.get("subword_vocab_count")
-    # user_id = args.get("user_id")
     username = get_jwt_identity()
     user = database.users.find_one({"username": username})
     user_id = str(user['_id'])
+
     # URI of the uploaded file
-    print(args.get("training_file"))
     training_file = f"{secure_filename(str(args.get("training_file")))}"
     
     tokenizer = Tokenizer(name, subword_vocab_count, user_id, training_file).getObject()
  
     # Find the user that trained it.
     if database.users.find_one({"_id": ObjectId(user_id)}):
+
+      models = database.models.find({'user_id': user_id})
+      num_models = 1
+      for models in models:
+         num_models+=1
+      
+      # Ensure no user has more than 20 models + 1 for pretrained model
+      if num_models >= 21:
+         return {'error': 'More than 20 models trained on this account.'}, 400
 
       # Model name validation - cannot name 2 models the same name
       if database.models.find_one({"user_id": user_id, "name": name}):
@@ -68,8 +88,16 @@ class CreateNewTokenizer(Resource):
       return {"error": "No user found"}, 400
 
 class DeleteTokenizer(Resource):
+  """
+    Resource class used to implement the delete tokenizer API endpoint.
+  """
   @jwt_required()
   def post(self):
+    """
+      Enables the backend to accept a post request from the frontend which deletes a trained tokenizer
+      based on the given arguments.
+    """
+
     args = delete_tokenizer_args.parse_args()
 
     tokenizer_id = args.get("tokenizer_id")
@@ -100,8 +128,15 @@ class DeleteTokenizer(Resource):
       return {"error": "No user found"}, 400
 
 class UpdateTokenizer(Resource):
+  """
+    Resource class used to implement the update tokenizer API endpoint.
+  """
   @jwt_required()
   def post(self):
+    """
+      Enables the backend to accept a post request from the frontend which
+      renames a trained models based on the given arguments.
+    """
     args = update_tokenizer_args.parse_args()
 
     tokenizer_id = args.get("tokenizer_id")
@@ -125,10 +160,18 @@ class UpdateTokenizer(Resource):
     else:
       return {"error": "Cannot find model"}, 400
 
-# Request from tokenizer itself - which is running separate
-# I.e: BPETraining.py will send a request to here
 class TokenizerFinishedTraining(Resource):
+  """
+    Resource class to implement an endpoint in which the BPETraining.py program can post to
+    in order to indicate it is done training.
+  """
   def post(self):
+    """
+      Enables the backend to accept a post request from BPETraining.py instance
+      to indicate it is done training.
+
+      The related entry is then updated in the db with the given arguments by the instance.
+    """
     args = finish_training_args.parse_args()
 
     tokenizer_id = args.get("_id")
@@ -154,12 +197,24 @@ class TokenizerFinishedTraining(Resource):
     
   
 class UploadTrainingFile(Resource):
+    """
+      Resource class used to implement an upload file API endpoint for uploading a training set.
+    """
     @jwt_required()
     def post(self):
+        """
+          Enables this endpoint to have a post request sent to it.
+
+          Creates and formats the file based on the username and how many instances a user is training.
+        """
         if 'file' not in request.files:
             return {'error': 'No file part'}, 400
         
         file = request.files['file']
+
+        # Check if the file uploaded is empty
+        if file.readline().decode('utf-8') == '':
+           return {'error': 'File content is empty'}, 400 
 
         if file.filename == '':
             return {'error': 'No selected file'}, 400
@@ -187,7 +242,7 @@ class UploadTrainingFile(Resource):
                 new_filename = f"{username}_{base_filename}_{temp}{file_extension}"
                 file_path = os.path.join(UPLOAD_FOLDER, new_filename)
                 temp += 1
-            
+            file.seek(0) # Reset the file cursor
             file.save(file_path)
             
             return {'message': 'File uploaded successfully','file_name': new_filename}, 200
@@ -195,7 +250,16 @@ class UploadTrainingFile(Resource):
             return {'error': 'File type not allowed'}, 400
         
 class CheckTrainingStatus(Resource):
+    """
+      Resource class used to implement an endpoint which enables checking the current status of an ongoing/complete training
+      of a tokenizer by the frontend.
+    """
     def get(self):
+        """
+          Enables this endpoint to accept a get request sent to it.
+
+          Queries the db by the tokenizer id and gets it's trained status.
+        """
         args = check_training_args.parse_args()
         _id = args.get('tokenizer_id')
         # Query the model by name and user_id

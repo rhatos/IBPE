@@ -3,7 +3,7 @@
 """
 
 from collections import defaultdict
-import time, json, sys, requests, os
+import time, sys, requests, os
 
 class BPETesting:
     def __init__(self):
@@ -21,6 +21,7 @@ class BPETesting:
         self.token_count = 0
         self.word_count = 0
         self.character_count = 0
+        self.num_spaces = 0
 
     def process_input(self):
         """Process the input arguments"""
@@ -48,7 +49,7 @@ class BPETesting:
 
     def open_file(self):
         """Open file and split corpus into words"""
-        flag = True
+        spaces = True       #while there are leading or trailing spaces, it's true
         strip_chars = '\r\n'
         split_char = ' '
         line_num = 0
@@ -66,14 +67,16 @@ class BPETesting:
                 
                 if line_num == 0:
                     # Remove all the spaces in the front of the file
-                    while flag:
+                    while spaces:
                         if line.startswith(' '):
                             line = line[1:]
                         else:
-                            flag = False
+                            spaces = False
 
                 # remove special characters and split into words with corresponding word frequency
                 for word in line.strip(strip_chars).split(split_char):
+                    if word == ' ':
+                        self.num_spaces += 1
                     if word:
                         # add a word to the dictionary, including the word's index in the file
                         self.words[word].append(i)
@@ -81,44 +84,47 @@ class BPETesting:
                 line_num += 1
                 
         # create empty lists to add tokenized words to the correct indexes later
-        self.tokenised_text = [None] * i
-        self.html_output = [None] * i
-        self.word_count = i
-
-
+        list_size = i-self.num_spaces
+        self.tokenised_text = [' '] * list_size
+        self.html_output = [' '] * list_size
+        self.word_count = list_size
 
     def process_text(self):
         """Process text input and split into words"""
         # remove spaces from the front and back of the text input
-        flag = True
-        while flag:
+        spaces = True       #while there are leading or trailing spaces, it's true
+        while spaces:
             for i in range(len(self.text_input)):
                 if self.text_input[0] == ' ':
                     self.text_input = self.text_input[1:]
                 else:
-                    flag = False
-        flag = True
-        while flag:
+                    spaces = False
+        spaces = True
+        while spaces:
             for i in range(len(self.text_input)):
                 if self.text_input[len(self.text_input) - 1] == ' ':
                     self.text_input = self.text_input[:-1]
                 else:
-                    flag = False
+                    spaces = False
                     
         split_char = ' '
         i = 0       # index of word in file
         for word in self.text_input.split(split_char):
+            if word == ' ':
+                        self.num_spaces += 1
             # iterate through all the words in the text
             if word:
                 # add a word to the dictionary, including the words index in the file
                 self.words[word].append(i)
             i += 1
         # create empty lists to add tokenised works to the correct indexes later
-        self.tokenised_text = [None] * i
-        self.html_output = [None] * i
-        self.word_count = i
+        list_size = i-self.num_spaces
+        self.tokenised_text = [' '] * list_size
+        self.html_output = [' '] * list_size
+        self.word_count = list_size
 
     def find_combination(self, combinations, vocabulary):
+        """Find the longest combination of consecutive letters that exists in the vocabulary for a word"""
         max_length = 0
         largest_combinations = []
 
@@ -135,11 +141,12 @@ class BPETesting:
                 elif len(current_sequence) == max_length:
                     largest_combinations.append(combination)
         # return the largest combination of consecutive letters that exists in the vocabulary
+
         return largest_combinations
 
 
     def recursive_algorithm(self, vocabulary, word, original_length):
-        # word = str(word, 'utf-8')
+        """Recursively find the longest combination of consecutive letters that exists in the vocabulary for a word"""
         # Base case: Empty word
         if len(word) == 0:
             return []
@@ -171,9 +178,11 @@ class BPETesting:
         array1 = self.recursive_algorithm(vocabulary, word[:start_idx], original_length)
         array2 = [found_combination]
         array3 = self.recursive_algorithm(vocabulary, word[end_idx:], original_length-end_idx)
+        
         return array1 + array2 + array3
     
     def write_to_file(self):
+        """Writing the tokenised text to an output file"""
         # Write output to output folder with epoch time attached for auto deletion later
         file_creation_time = int(time.time())
         self.output_file = "bpe/outputs/testing/"+str(file_creation_time)+"_tokenized_"+self.filename.split("/")[3] 
@@ -181,8 +190,13 @@ class BPETesting:
             file.write(" ".join(self.tokenised_text))
 
     def create_json_from_html_output(self):
+        """Converting the html_output to a JSON object"""
         # create the HTML content by joining all tokens
         html_content = "".join([token for word_tokens in self.html_output for token in word_tokens])
+        
+        print(self.html_output)
+
+
 
         # create the dictionary representing our JSON structure
         json_object = {
@@ -193,8 +207,15 @@ class BPETesting:
     
     def process_statistics(self):
         """Use the token_count and vocabulary_used to calculate statistics and update the statistics object"""
-        no_tokens = len(set(self.vocabulary_used))
+        no_tokens = len(set(self.vocabulary_used)) # Number of unique tokens
+
+        # Calculate total number of tokens displayed on the page.
+        for entry in self.html_output:
+            for word in entry:
+                if word != ' ':
+                    self.token_count += 1
         ratio = self.token_count / self.word_count
+        
         percentage = len(self.vocabulary_used) / len(self.vocab)
         json_object = {
                 "character_count": self.character_count,
@@ -207,11 +228,15 @@ class BPETesting:
 
     def tokenise(self):
         """Train BPE tokenizer on corpus by running the recursive function on each word."""
+
+        tokenized_word_list = []
+
         k = 0
         for word in self.words.keys():
             # check if the whole word is in the vocab or it needs to be broken up into tokens
             original_length = len(word)
             tokenised_word = self.recursive_algorithm(self.vocab, word, original_length)
+            tokenized_word_list.append(tokenised_word)
             formatted_word = "_".join(tokenised_word).strip('_')
             if formatted_word[-4:] == "</w>":
                 formatted_word = formatted_word[:-4]
@@ -222,13 +247,18 @@ class BPETesting:
                     k = 0
                 if tokenised_word[i] not in self.vocabulary_used and tokenised_word[i] in self.vocab:
                     self.vocabulary_used.add(tokenised_word[i])
+                    
                 tokenised_word[i] = f"<span style='background-color:{self.colours[k]}; color:white'>{tokenised_word[i]}</span>"
+                
                 k += 1
                 
             for i in self.words[word]:
                 self.tokenised_text[i] = formatted_word
+                
                 tokenised_word.append(' ')
                 self.html_output[i] = tokenised_word
+
+
                 
     def delete_file(self):
         """Delete the file saved to the given filepath."""

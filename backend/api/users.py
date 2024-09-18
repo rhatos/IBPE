@@ -1,20 +1,23 @@
 from flask_restful import Resource, reqparse
-from flask import jsonify
 from database import database
-from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required
+from flask_jwt_extended import create_access_token, create_refresh_token
 from models import User
-from werkzeug.security import check_password_hash
 from passlib.hash import pbkdf2_sha256
 
 class UserRegistration(Resource):
-
+  """
+    Resource class used to implement the user registration api endpoint.
+  """
   def post(self):
-    
+    """
+      Enables this endpoint to have a post request sent to it.
+
+      Registers and validates a new user's details as well as providing a JWT token.
+    """
     args = user_register_post_args.parse_args()
     username = args.get("username")
     email = args.get("email")
     password = args.get("password")
-    #print(username, password, email)
 
     user = User(username, email, password).getObject()
 
@@ -38,8 +41,15 @@ class UserRegistration(Resource):
     return {"error": "Register failed"}, 400
 
 class UserLogin(Resource):
-  
+  """
+    Resource class used to implement the login api endpoint.
+  """
   def post(self):
+    """
+      Enables this endpoint to have a post request sent to it.
+
+      Verifies user details and grants an access token.
+    """
     args = user_login_get_args.parse_args()
     username = args.get("username")
     password = args.get("password")
@@ -61,18 +71,6 @@ class UserLogin(Resource):
       "refresh_token": refresh_token,
       "username": username
     }, 200
-    
-class TokenRefresh(Resource):
-  def post(self):
-    return {"message": "Token refresh"}
-
-class UserLogoutAccess(Resource):
-  def post(self):
-    return {"message": "User logout"}
-
-class UserLogoutRefresh(Resource):
-  def post(self):
-    return {"message": "User logout"}
 
 # Login Request arguments
 user_login_get_args = reqparse.RequestParser()

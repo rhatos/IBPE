@@ -6,25 +6,39 @@ from database import database
 from models import TokenizedText
 from werkzeug.utils import secure_filename
 import subprocess
-import time
 import os.path
 
 UPLOAD_FOLDER = 'bpe/uploads/testTokenizerFiles'
 ALLOWED_EXTENSIONS = {'txt'}
 
-# Helper function to check the allowed file extensions
 def allowed_file(filename):
+  """
+    Helper function to check the allowed file extensions
+  """
   return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 class CreateTestTokenizer(Resource):
-  @jwt_required()
+  """
+    Resource class used to implement the create test API endpoint
+  """
+  @jwt_required(optional=True)
   def post(self):
+    """
+      Enables the backend to accept a post request which creates a new test db entry 
+      and spawns an instance of the tokenization python file with the given arguments.
+    """
+    
     # Request arguments
     args = create_test_tokenizer_args.parse_args()
 
     # Get arguments specified by frontend
     name = args.get("test_name")
     username = get_jwt_identity()
+    
+    # Default user
+    if(username == None):
+       username = 'system'
+    
     user = database.users.find_one({"username": username})
     user_id = str(user['_id'])
     tokenizer_id = args.get("tokenizer_id") # The tokenizer used to test this text
@@ -89,16 +103,22 @@ class CreateTestTokenizer(Resource):
         database.users.update_one(query_filter, push_operation)
 
         return {"message": "Test job created, tokenization started", 'test_id': test_id}, 200
-      
-
+    
     else:
       return {"error": "No user found"}, 400
 
-
-# Request from testingTokenizer itself - which is running separate
-# I.e: BPETesting.py will send a request to here
 class TokenizerFinishedTesting(Resource):
+  """
+    Resource class to implement an endpoint in which the BPETesting.py program can post to
+    in order to indicate it is done tokenizing.
+  """
   def post(self):
+    """
+      Enables the backend to accept a post request from a BPETesting.py instance to indicate
+      it is done tokenizing.
+
+      The related entry is then updated in the db with the given arguments by the instance.
+    """
     args = finish_testing_args.parse_args()
 
     test_id = args.get("_id")
@@ -133,12 +153,25 @@ class TokenizerFinishedTesting(Resource):
 
 
 class UploadTestFile(Resource):
+  """
+    Resource class used to implement an upload file endpoint for uploading a test corpus.
+  """
   @jwt_required()
   def post(self):
+    """
+      Enables this endpoint to accept a post request from the frontend.
+
+      Creates and formats the file based on the username.
+    """
     if 'file' not in request.files:
       return {'error': 'No file part'}, 400
     
     file = request.files['file']
+    
+
+    # Check if the file uploaded is empty
+    if file.readline().decode('utf-8') == '':
+        return {'error': 'File content is empty'}, 400 
 
     if file.filename == '':
       return {'error': 'No selected file'}, 400
@@ -151,7 +184,7 @@ class UploadTestFile(Resource):
       # Construct the pattern to match user files
       user_file = f"{username}_{base_filename}_{file_extension}"
       file_path = os.path.join(UPLOAD_FOLDER, user_file)
-
+      file.seek(0) # Reset the file cursor
       file.save(file_path)
 
       return {'message': 'File uploaded successfully', 'file_name': user_file}, 200
@@ -159,8 +192,16 @@ class UploadTestFile(Resource):
       return {'error': 'File type not allowed'}, 400
 
 class DownloadTestOutput(Resource):
+  """
+    Resource class used to implement a download/export endpoint for downloading a tokenized output.
+  """
   @jwt_required()
   def get(self):
+    """
+      Enables this endpoint to accept a get request.
+
+      Uses the user's id and the requested test id to get the generated output file and return it as a download.
+    """
     args = download_test_args.parse_args()
     test_id = args.get('test_id')
 
@@ -194,7 +235,17 @@ class DownloadTestOutput(Resource):
       return {"error": "Cannot find test"}, 404
 
 class CheckTokenizationStatus(Resource):
+  """
+    Resource class used to implement an endpoint which enables checking the current status of an ongoing/complete tokenization
+    by the frontend.
+  """
   def get(self):
+    """
+      Enables the backend to accept a get request from the frontend.
+
+      Determines what type of test is being looked for (file or text) and returns the related information on that test via
+      it's test id.
+    """
     args = check_tokenization_args.parse_args()
 
     test_id = args.get('test_id')

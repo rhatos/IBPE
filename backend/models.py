@@ -1,8 +1,11 @@
-import uuid
 from passlib.hash import pbkdf2_sha256
-from flask import jsonify
 
 class User():
+  """
+    A class used to represent a registered user.
+
+    Password is encrypted with sha256 hash.
+  """
   def __init__(self, username, email, password):
     self.username = username
     self.email = email
@@ -11,6 +14,9 @@ class User():
     self.tokenized_texts=[]
   
   def getObject(self):
+    """
+      Returns a json object of a user's attributes.
+    """
     return {
       "username": self.username,
       "email": self.email,
@@ -20,17 +26,22 @@ class User():
     }
 
 class Tokenizer():
+  """
+    A class used to represent a trained/to be trained tokenizer model.
+  """
   def __init__(self, name, subword_vocab_count, user_id, training_file):
     self.name = name
     self.subword_vocab_count = subword_vocab_count
     self.tokens = []
     self.user_id = user_id
     self.trained = False
-
     self.training_file = training_file
     self.training_time = 0
   
   def getObject(self):
+    """
+      Returns a json object of the model's attributes.
+    """
     return {
       "name": self.name,
       "subword_vocab_count": self.subword_vocab_count,
@@ -41,9 +52,10 @@ class Tokenizer():
       "tokens": self.tokens
     }
 
-# TODO:
-# Add statistics to the model
 class TokenizedText():
+  """
+    A class used to represent a tokenized text.
+  """
   def __init__(self, name, tokenizer_id, input_text, input_file, user_id):
     self.name = name
     self.tokenizer_id = tokenizer_id
@@ -55,6 +67,9 @@ class TokenizedText():
     self.tokenization_time = 0
   
   def getObject(self):
+    """
+      Returns a json object of the tokenized text object's attributes.
+    """
     return {
       "name": self.name,
       "user_id": self.user_id,
