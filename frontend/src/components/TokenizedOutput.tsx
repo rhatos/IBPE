@@ -71,22 +71,22 @@ const TokenizedOutput = () => {
 
             <div className="flex flex-row text-white font-inter text-center space-x-10 bg-bpelightgrey w-[50rem] justify-between p-2 rounded-xl drop-shadow-lg">
               <div className="flex items-center flex-col">
-                <p className="font-bold text-bpegreen">Tokens</p> {/* Display the number of tokens */}
+                <p className="font-bold text-bpegreen">Unique Tokens Used:</p> {/* Display the number of tokens */}
                 <p>{statistics.no_tokens || "N/A"}</p>
               </div>
 
               <div className="flex items-center flex-col">
-                <p className="font-bold text-bpegreen">Time To Complete</p> {/* Display the time taken */}
+                <p className="font-bold text-bpegreen">Time To Complete:</p> {/* Display the time taken */}
                 <p>{timeTaken || "N/A"}s</p>
               </div>
 
               <div className="flex items-center flex-col">
-                <p className="font-bold text-bpegreen">Token to Word Ratio</p> {/* Display the token to word ratio */}
+                <p className="font-bold text-bpegreen">Token to Word Ratio:</p> {/* Display the token to word ratio */}
                 <p>{statistics.ratio}</p>
               </div>
 
               <div className="flex items-center flex-col">
-                <p className="font-bold text-bpegreen">% of Vocabulary Used</p> {/* Display the percentage of vocabulary used */}
+                <p className="font-bold text-bpegreen">% of Vocabulary Used:</p> {/* Display the percentage of vocabulary used */}
                 <p>{statistics.percentage}%</p>
               </div>
             </div>
@@ -100,22 +100,22 @@ const TokenizedOutput = () => {
             <div className="flex flex-row text-white font-inter text-center space-x-10 bg-bpelightgrey w-[50rem] justify-between p-2 rounded-xl drop-shadow-lg">
               
               <div className="flex items-center flex-col">
-                <p className="font-bold text-bpegreen">Tokens</p> {/* Display the number of tokens */}
+                <p className="font-bold text-bpegreen">Unique Tokens Used:</p> {/* Display the number of tokens */}
                 <p>{statistics.no_tokens || "N/A"}</p>
               </div>
 
               <div className="flex items-center flex-col">
-                <p className="font-bold text-bpegreen">Time To Complete</p> {/* Display the time taken */}
+                <p className="font-bold text-bpegreen">Time To Complete:</p> {/* Display the time taken */}
                 <p>{timeTaken || "N/A"}s</p>
               </div>
 
               <div className="flex items-center flex-col">
-                <p className="font-bold text-bpegreen">Token to Word Ratio</p> {/* Display the token to word ratio */}
+                <p className="font-bold text-bpegreen">Token to Word Ratio:</p> {/* Display the token to word ratio */}
                 <p>{statistics.ratio}</p>
               </div>
 
               <div className="flex items-center flex-col">
-                <p className="font-bold text-bpegreen">% of Vocabulary Used</p>  {/* Display the percentage of vocabulary used */}
+                <p className="font-bold text-bpegreen">% of Vocabulary Used:</p>  {/* Display the percentage of vocabulary used */}
                 <p>{statistics.percentage}%</p>
               </div>
             </div>

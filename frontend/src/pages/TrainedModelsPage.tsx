@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 interface Model {
   _id: string | null;
   name: string;
-  subword_vocab_count: number;
+  tokens: Array<string>;
   trained: boolean;
   training_time: number;
 }
@@ -95,7 +95,7 @@ const TrainedModelsPage = () => {
             <TrainedModelItem
               key={model._id} // Unique key for each item
               name={model.name} // Pass model name
-              subword_vocab_count={model.subword_vocab_count} // Pass model vocabulary size
+              tokens={model.tokens} // Pass model vocabulary size
               _id={model._id} // Pass model ID
               trained={model.trained} // Pass model training status
               training_time={model.training_time}

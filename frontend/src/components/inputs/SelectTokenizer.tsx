@@ -13,7 +13,7 @@ interface SelectTokenizerProps {
 interface Model {
   _id: string | null;
   name: string;
-  subword_vocab_count: number;
+  tokens: Array<string>;
   trained: boolean;
 }
 
@@ -127,7 +127,7 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
                       {model.name}
                     </div>
                     <div className="text-bpegreen font-inter text-xs pr-2">
-                      {formatVocabularyCount(model.subword_vocab_count)} Vocabulary
+                      {formatVocabularyCount(model.tokens.length)} Vocabulary
                     </div>
                   </li>
                 ))
