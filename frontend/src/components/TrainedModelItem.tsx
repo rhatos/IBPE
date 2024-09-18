@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 interface TrainedModelItemProps {
   _id: string | null; // The ID of the trained model
   name: string; // Name of the model
-  subword_vocab_count: number; // Subword vocabulary count (number of tokens)
+  tokens: Array<string>; // Subword vocabulary count (number of tokens)
   trained: boolean; // Whether the model is trained or still in training
   training_time: number; // Time taken to train the model
   onChange: () => void; // Callback function when the model is deleted
@@ -22,7 +22,7 @@ const formatVocabularyCount = (count: number) => {
 // Main component definition
 const TrainedModelItem = ({
   name,
-  subword_vocab_count,
+  tokens,
   _id,
   trained,
   training_time,
@@ -148,7 +148,7 @@ const TrainedModelItem = ({
         <div className="flex flex-row space-x-2 items-center">
           <p className="text-white font-inter text-sm">Vocabulary Size:</p>
           <span className="text-bpegreen font-inter text-sm">
-            {formatVocabularyCount(subword_vocab_count)}
+            {formatVocabularyCount(tokens.length)}
           </span>{" "}
           {/* Formatted vocabulary count */}
           <span className="text-white font-inter text-xs">(Tokens)</span>
