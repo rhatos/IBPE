@@ -16,6 +16,9 @@ const TrainingItem = ({
   const progressBarRef = useRef<HTMLDivElement>(null); // Ref for the progress bar
   const finalUpdateRef = useRef<boolean>(false); // Ref to track if the final update has been made
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
   useEffect(() => {
     // Effect to update the progress bar
     let filled = 10; // Initial width of the progress bar
@@ -28,7 +31,7 @@ const TrainingItem = ({
         // Fetch the status of the training process
         try {
           const response = await fetch(
-            `http://172.29.163.22:5000/api/tokenizer/status?tokenizer_id=${_id}`,
+            `${apiUrl}/api/tokenizer/status?tokenizer_id=${_id}`,
             {
               method: "GET",
               headers: {

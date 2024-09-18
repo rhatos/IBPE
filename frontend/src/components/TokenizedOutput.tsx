@@ -17,12 +17,15 @@ const TokenizedOutput = () => {
 
   const [isExporting, setIsExporting] = useState(false); // State to track if the export is in progress
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
   const handleExport = async () => {
     // Function to handle the export action
     setIsExporting(true);
     try {
       const response = await fetch(
-        `http://172.29.163.22:5000/api/tokenizer-test/download?test_id=${testId}`,
+        `${apiUrl}/api/tokenizer-test/download?test_id=${testId}`,
         {
           method: "GET",
           headers: {

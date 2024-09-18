@@ -15,19 +15,19 @@ const TrainedModelsPage = () => {
   // State to store the list of models
   const [models, setModels] = useState<Model[]>([]);
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
   // useEffect to fetch models when the component mounts
   useEffect(() => {
     const fetchModels = async () => {
       try {
         const token = localStorage.getItem("token"); // Get token from local storage
-        const response = await fetch(
-          "http://172.29.163.22:5000/api/tokenizer/models",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${apiUrl}/api/tokenizer/models`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
         if (response.ok) {
           setModels(data.models); // If response is OK, update state with the models
@@ -47,14 +47,11 @@ const TrainedModelsPage = () => {
     const fetchModels = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(
-          "http://172.29.163.22:5000/api/tokenizer/models",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${apiUrl}/api/tokenizer/models`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
         if (response.ok) {
           setModels(data.models);
