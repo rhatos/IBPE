@@ -104,8 +104,7 @@ const LogInButton: React.FC = () => {
       </button>
 
       {/* Modal component to display the login form */}
-      <Modal isOpen={isModalOpen} onClose={() => resetFormState()}>
-        {" "}
+      <Modal isOpen={isModalOpen} onClose={() => resetFormState()}> 
         {/* Modal is controlled by the isModalOpen state */}
         <h2 className="text-bpegreen text-lg font-semibold mb-4">Login</h2>
         {/* Display error message if there's any */}
@@ -142,7 +141,6 @@ const LogInButton: React.FC = () => {
             }`} // Button styles change based on whether it's disabled
             disabled={isButtonDisabled}
           >
-            {" "}
             {/* Button disabled based on state */}
             Login
           </button>

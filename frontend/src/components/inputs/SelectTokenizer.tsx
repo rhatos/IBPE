@@ -139,7 +139,7 @@ const SelectTokenizer: React.FC<SelectTokenizerProps> = ({
                       {model.name}
                     </div>
                     <div className="text-bpegreen font-inter text-xs pr-2">
-                      {formatVocabularyCount(model.subword_vocab_count)}{" "}
+                      {formatVocabularyCount(model.subword_vocab_count)}
                       Vocabulary
                     </div>
                   </li>

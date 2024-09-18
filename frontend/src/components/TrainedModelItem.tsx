@@ -132,8 +132,8 @@ const TrainedModelItem = ({
           ) : (
             <>
               <h1 className="text-white font-inter text-xl">
-                {name}{" "}
-                {!trained && <span className="text-red-500">(Training)</span>}{" "}
+                {name}
+                {!trained && <span className="text-red-500">(Training)</span>}
                 {/* Display (Training) if model is not trained */}
               </h1>
               <button
@@ -149,7 +149,7 @@ const TrainedModelItem = ({
           <p className="text-white font-inter text-sm">Vocabulary Size:</p>
           <span className="text-bpegreen font-inter text-sm">
             {formatVocabularyCount(tokens.length)}
-          </span>{" "}
+          </span>
           {/* Formatted vocabulary count */}
           <span className="text-white font-inter text-xs">(Tokens)</span>
         </div>
@@ -157,7 +157,7 @@ const TrainedModelItem = ({
           <p className="text-white font-inter text-sm">Training Time</p>
           <span className="text-bpegreen font-inter text-sm">
             {training_time.toPrecision(4)}s
-          </span>{" "}
+          </span>
           {/* Formatted Training Time */}
         </div>
       </div>
