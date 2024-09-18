@@ -65,10 +65,10 @@ const CorpusUpload: React.FC<CorpusUploadProps> = ({ type, onUpload }) => {
   return (
     <div className="bg-bpelightgrey flex flex-col w-[40rem] rounded-md h-[19rem] items-center justify-center p-8">
       <span className="text-white">
-        {type === "test" ? "Upload Test Corpus" : "Upload Training Corpus"}{" "}
+        {type === "test" ? "Upload Test Corpus" : "Upload Training Corpus"}
         {/* Display based on 'type' */}
       </span>
-      <span className="text-white text-xs pb-4">File must be .txt*</span>{" "}
+      <span className="text-white text-xs pb-4">File must be .txt*</span>
       {/* File format hint */}
       <div className="relative flex flex-col items-center justify-center border-dashed border-2 border-gray-300 rounded-lg w-full h-full p-4">
         {!uploadedFileName ? ( // Show the upload form or success message
@@ -89,7 +89,6 @@ const CorpusUpload: React.FC<CorpusUploadProps> = ({ type, onUpload }) => {
       </div>
       {error && (
         <div className="mt-4 bg-red-500 text-white p-2 rounded-md">
-          {" "}
           {/* Error message */}
           {error}
         </div>

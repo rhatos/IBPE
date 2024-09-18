@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 interface TrainedModelItemProps {
   _id: string | null; // The ID of the trained model
   name: string; // Name of the model
-  subword_vocab_count: number; // Subword vocabulary count (number of tokens)
+  tokens: Array<string>; // Subword vocabulary count (number of tokens)
   trained: boolean; // Whether the model is trained or still in training
   training_time: number; // Time taken to train the model
   onChange: () => void; // Callback function when the model is deleted
@@ -22,7 +22,7 @@ const formatVocabularyCount = (count: number) => {
 // Main component definition
 const TrainedModelItem = ({
   name,
-  subword_vocab_count,
+  tokens,
   _id,
   trained,
   training_time,
@@ -132,8 +132,8 @@ const TrainedModelItem = ({
           ) : (
             <>
               <h1 className="text-white font-inter text-xl">
-                {name}{" "}
-                {!trained && <span className="text-red-500">(Training)</span>}{" "}
+                {name}
+                {!trained && <span className="text-red-500">(Training)</span>}
                 {/* Display (Training) if model is not trained */}
               </h1>
               <button
@@ -148,8 +148,8 @@ const TrainedModelItem = ({
         <div className="flex flex-row space-x-2 items-center">
           <p className="text-white font-inter text-sm">Vocabulary Size:</p>
           <span className="text-bpegreen font-inter text-sm">
-            {formatVocabularyCount(subword_vocab_count)}
-          </span>{" "}
+            {formatVocabularyCount(tokens.length)}
+          </span>
           {/* Formatted vocabulary count */}
           <span className="text-white font-inter text-xs">(Tokens)</span>
         </div>
@@ -157,7 +157,7 @@ const TrainedModelItem = ({
           <p className="text-white font-inter text-sm">Training Time</p>
           <span className="text-bpegreen font-inter text-sm">
             {training_time.toPrecision(4)}s
-          </span>{" "}
+          </span>
           {/* Formatted Training Time */}
         </div>
       </div>
