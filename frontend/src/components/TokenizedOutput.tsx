@@ -15,14 +15,21 @@ const TokenizedOutput = () => {
   
   const [isExporting, setIsExporting] = useState(false); // State to track if the export is in progress
 
-  const handleExport = async () => { // Function to handle the export action
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
+  const handleExport = async () => {
+    // Function to handle the export action
     setIsExporting(true);
     try {
-      const response = await fetch(`http://127.0.0.1:5000/api/tokenizer-test/download?test_id=${testId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
+      const response = await fetch(
+        `${apiUrl}/api/tokenizer-test/download?test_id=${testId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
         }
       });
       // Check if the response is successful

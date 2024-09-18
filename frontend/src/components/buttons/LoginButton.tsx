@@ -23,6 +23,9 @@ const LogInButton: React.FC = () => {
   const [errMessage, setErrMessage] = useState<string | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
   // Function to reset the form fields and modal state
   const resetFormState = () => {
     dispatch(setLogInModalOpen(false)); // Close the login modal
@@ -45,11 +48,11 @@ const LogInButton: React.FC = () => {
   // Function to handle the login process when the login button is clicked
   const handleLoginClick = async () => {
     if (isButtonDisabled) return; // If the button is disabled, don't proceed with login
-
+    console.log(apiUrl);
     try {
       // API call to log in the user
-      const response = await fetch('http://127.0.0.1:5000/api/user/login', {
-        method: 'POST',
+      const response = await fetch(`${apiUrl}/api/user/login`, {
+        method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },

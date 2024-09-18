@@ -28,6 +28,9 @@ const SignUpButton: React.FC = () => {
   const [errMessage, setErrMessage] = useState<string | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // State to disable or enable the sign-up button
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
   // Function to reset form fields and modal state
   const resetFormState = () => {
     dispatch(setRegModalOpen(false)); // Close the registration modal
@@ -64,10 +67,10 @@ const SignUpButton: React.FC = () => {
 
     try {
       // API call to register a new user
-      const response = await fetch('http://127.0.0.1:5000/api/user/register', {
-        method: 'POST',
+      const response = await fetch(`${apiUrl}/api/user/register`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username: username,

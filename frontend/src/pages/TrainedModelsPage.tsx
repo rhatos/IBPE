@@ -16,13 +16,17 @@ const TrainedModelsPage = () => {
   const [filteredModels, setFilteredModels] = useState<Model[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
+  // useEffect to fetch models when the component mounts
   useEffect(() => {
     const fetchModels = async () => {
       try {
-        const token = localStorage.getItem('token'); // Get token from local storage
-        const response = await fetch('http://127.0.0.1:5000/api/tokenizer/models', {
+        const token = localStorage.getItem("token"); // Get token from local storage
+        const response = await fetch(`${apiUrl}/api/tokenizer/models`, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         const data = await response.json();
@@ -51,10 +55,10 @@ const TrainedModelsPage = () => {
   const handleModelChange = () => {
     const fetchModels = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('http://127.0.0.1:5000/api/tokenizer/models', {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${apiUrl}/api/tokenizer/models`, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         const data = await response.json();

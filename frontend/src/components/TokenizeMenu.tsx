@@ -22,6 +22,9 @@ const TokenizeMenu = () => {
   const [isLoading, setIsLoading] = useState(false); // State to track if loading animation should be shown
   const navigate = useNavigate();
 
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
   // Function to reset all form-related states
   const resetFormState = () => {
     setFileOptionSelected(false);
@@ -90,6 +93,27 @@ const TokenizeMenu = () => {
           body: JSON.stringify(requestData),
         });
 
+        if (loggedIn) {
+          const token = localStorage.getItem("token"); // Retrieve authentication token from localStorage
+          // Send the request to the backend to create a tokenizer test
+          response = await fetch(`${apiUrl}/api/tokenizer-test/create`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(requestData),
+          });
+        } else {
+          // Send the request to the backend to create a tokenizer test
+          response = await fetch(`${apiUrl}/api/tokenizer-test/create`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+          });
+        }
         const data = await response.json(); // Parse JSON response
         if (response.ok) { // If request is successful
           console.log('Test created successfully:', data);
@@ -110,12 +134,15 @@ const TokenizeMenu = () => {
   const startPolling = (testId: string) => {
     const intervalId = setInterval(async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:5000/api/tokenizer-test/status?test_id=${testId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch(
+          `${apiUrl}/api/tokenizer-test/status?test_id=${testId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const data = await response.json();
         if (data.tokenized) { // If test is complete (tokenized)
           clearInterval(intervalId); // Stop polling

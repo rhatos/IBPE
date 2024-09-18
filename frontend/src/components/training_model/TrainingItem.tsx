@@ -9,7 +9,11 @@ const TrainingItem = ({ modelName, _id }: { modelName: string, _id: string }) =>
   const progressBarRef = useRef<HTMLDivElement>(null); // Ref for the progress bar
   const finalUpdateRef = useRef<boolean>(false); // Ref to track if the final update has been made
 
-  useEffect(() => { // Effect to update the progress bar
+  // Backend url env value
+  const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
+
+  useEffect(() => {
+    // Effect to update the progress bar
     let filled = 10; // Initial width of the progress bar
     let isRunning = true; // Flag to track if the progress bar is still running
 
@@ -18,12 +22,15 @@ const TrainingItem = ({ modelName, _id }: { modelName: string, _id: string }) =>
       const interval = setInterval(async () => { // Interval to update the progress bar
         // Fetch the status of the training process
         try {
-          const response = await fetch(`http://127.0.0.1:5000/api/tokenizer/status?tokenizer_id=${_id}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
+          const response = await fetch(
+            `${apiUrl}/api/tokenizer/status?tokenizer_id=${_id}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
 
           const data = await response.json();
           if (response.ok) { // Check if the training process is complete
