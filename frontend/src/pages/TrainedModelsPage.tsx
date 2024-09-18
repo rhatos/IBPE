@@ -14,6 +14,8 @@ interface Model {
 const TrainedModelsPage = () => {
   // State to store the list of models
   const [models, setModels] = useState<Model[]>([]);
+  const [filteredModels, setFilteredModels] = useState<Model[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Backend url env value
   const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
@@ -41,6 +43,15 @@ const TrainedModelsPage = () => {
 
     fetchModels(); // Call the function to fetch models
   }, []); // Dependency array is empty, so this runs only on mount
+
+  useEffect(() => {
+    // Filter models based on the search query
+    setFilteredModels(
+      models.filter((model) =>
+        model.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+  }, [searchQuery, models]);
 
   // Function to handle model change and re-fetch models after deletion
   const handleModelChange = () => {
