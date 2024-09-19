@@ -29,6 +29,7 @@ services:
       - 5173:5173
     volumes:
       - "./frontend:/app"
+      - "/app/node_modules"
     command: ["npm", "run", "dev", "--host"]
     network_mode: "host"
 
@@ -39,6 +40,7 @@ services:
       - 5174:5174
     volumes:
       - "./docs:/app"
+      - "/app/node_modules"
     command: ["npm", "run", "start"]
     network_mode: "host"
 
