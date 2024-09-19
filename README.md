@@ -1,16 +1,36 @@
-# Capstone 2024
+# Interactive BPE Tokenizer - Capstone 2024 [Group 112]
 
-### Frontend Installation
+Our Interactive BPE Tokenizer serves as a hands-on educational tool to help interested individuals learn the fundamentals of Natural Language Processing (NLP) by training and testing BPE tokenizers.
 
-`cd frontend`
+##### Members
 
-`npm install`
+- Ethan Lawrence
+- Kirsten Sutherland
+- Conor Karl McKeag
 
-## Docker Instructions
+## USAGE
+
+### Set ENV values
+
+Create a `.env` file in `/frontend`
+
+Add: `VITE_BACKEND_API_URL="http://127.0.0.1:5000"`
+
+### Docker Instructions
+
+Ensure you have [Docker/Docker Desktop](https://www.docker.com/) installed.
 
 `docker-compose up -d`
 
 It may take some time but it will eventually be running in the background.
+
+#### Frontend
+
+After docker is done building the frontend should be available at `http://localhost:8080`
+
+#### Docs
+
+The docs are available at either [this GitPage](https://rhatos.github.io/capstone-docs), or locally at `http://localhost:3000`
 
 ### MongoDB
 

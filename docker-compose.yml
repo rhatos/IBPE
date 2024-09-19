@@ -32,6 +32,16 @@ services:
     command: ["npm", "run", "dev", "--host"]
     network_mode: "host"
 
+  docs:
+    container_name: docs
+    build: ./docs
+    ports:
+      - 5174:5174
+    volumes:
+      - "./docs:/app"
+    command: ["npm", "run", "start"]
+    network_mode: "host"
+
 volumes:
   mongodata:
     driver: local
