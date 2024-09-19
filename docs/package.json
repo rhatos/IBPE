@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "docsify-cli": "^4.4.4"
+  },
+  "scripts": {
+    "start": "docsify serve .",
+    "init-docs": "docsify init"
+  },
+  "name": "docs",
+  "version": "1.0.0",
+  "description": "This site serves as a user manual for the Interactive BPE Tokenizer capstone project.",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
+}

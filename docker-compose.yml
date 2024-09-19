@@ -1,0 +1,54 @@
+services:
+  mongodb:
+    image: mongo
+    container_name: bpe-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: capstone2024
+      MONGO_INITDB_ROOT_PASSWORD: changeme123
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodata:/data/db
+    networks:
+      - capstone
+
+  backend:
+    build: ./backend
+    ports:
+      - 5000:5000
+    volumes: [./backend:/app]
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_RUN_HOST=0.0.0.0
+    networks:
+      - capstone
+
+  frontend:
+    build: ./frontend
+    ports:
+      - 8080:8080
+    volumes:
+      - "./frontend:/app"
+      - "/app/node_modules"
+    command: ["npm", "run", "dev", "--host"]
+    networks:
+      - capstone
+
+  docs:
+    build: ./docs
+    ports:
+      - 3000:3000
+    volumes:
+      - "./docs:/app"
+      - "/app/node_modules"
+    command: ["npm", "run", "start"]
+    networks:
+      - capstone
+
+volumes:
+  mongodata:
+    driver: local
+
+networks:
+  capstone: {}
