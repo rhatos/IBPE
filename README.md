@@ -4,9 +4,9 @@ Our Interactive BPE Tokenizer serves as a hands-on educational tool to help inte
 
 ##### Members
 
-- Ethan Lawrence
-- Kirsten Sutherland
-- Conor Karl McKeag
+- Ethan Lawrence (LWRETH001)
+- Kirsten Sutherland (STHKIR002)
+- Conor Karl McKeag (MCKCON007)
 
 ## USAGE
 
