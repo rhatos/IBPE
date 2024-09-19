@@ -2,6 +2,10 @@
 
 Our Interactive BPE Tokenizer serves as a hands-on educational tool to help interested individuals learn the fundamentals of Natural Language Processing (NLP) by training and testing BPE tokenizers.
 
+### Link To Repository:
+
+https://gitlab.cs.uct.ac.za/capstone-2024/capstone-2024
+
 ##### Members
 
 - Ethan Lawrence (LWRETH001)
